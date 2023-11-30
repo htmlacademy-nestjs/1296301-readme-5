@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Валерий Куликов](https://up.htmlacademy.ru/nodejs-2/5/user/1296301).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Сушко](https://up.htmlacademy.ru/nodejs-2/5/user/281347).
 
 ---
 
