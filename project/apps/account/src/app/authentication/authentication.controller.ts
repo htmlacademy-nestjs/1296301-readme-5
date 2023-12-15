@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Body, Param, Headers } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, HttpStatus } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { fillDto } from '@project/shared/helpers';
@@ -7,12 +8,17 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { ChangePasswordUserDto } from './dto/change-password-user.dto';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 
+@ApiTags('authentication')
 @Controller('auth')
 export class AuthenticationController {
   constructor(
     private readonly authService: AuthenticationService
   ) {}
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The new user has been successfully created.'
+  })
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(dto);
@@ -20,6 +26,15 @@ export class AuthenticationController {
     return fillDto(UserRdo, newUser.toPOJO());
   }
 
+  @ApiResponse({
+    type: LoggedUserRdo,
+    status: HttpStatus.OK,
+    description: 'User has been successfully logged.'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Password or Login is wrong.',
+  })
   @Post('login')
   public async login(@Body() dto: LoginUserDto) {
     const verifiedUser = await this.authService.verifyUser(dto);
@@ -27,6 +42,11 @@ export class AuthenticationController {
     return fillDto(LoggedUserRdo, verifiedUser.toPOJO());
   }
 
+  @ApiResponse({
+    type: UserRdo,
+    status: HttpStatus.OK,
+    description: 'User password has been successfully changed.'
+  })
   @Post('update-password')
   public async updatePassword(@Body() dto: ChangePasswordUserDto) {
     const updatedUser = await this.authService.changePassword(dto);
@@ -34,6 +54,11 @@ export class AuthenticationController {
     return fillDto(UserRdo, updatedUser.toPOJO());
   }
 
+  @ApiResponse({
+    type: UserRdo,
+    status: HttpStatus.OK,
+    description: 'User found'
+  })
   @Get(':id')
   public async show(@Param('id') id: string) {
     const existUser = await this.authService.getUser(id);

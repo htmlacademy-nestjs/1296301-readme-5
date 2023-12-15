@@ -1,3 +1,13 @@
+export const API_TAG_NAME = 'feeds';
+
+export const FeedError = {
+  EmptyList: 'There are no posts that can be loaded',
+} as const;
+
+export const FeedMessages = {
+  ShowAll: 'List of publications is showing',
+} as const;
+
 export const FeedPath = {
   Main: 'feed',
   Id: ':id',
