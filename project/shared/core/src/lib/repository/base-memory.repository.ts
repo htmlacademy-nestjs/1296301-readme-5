@@ -1,15 +1,14 @@
 import { randomUUID } from 'node:crypto';
-import { Entity, EntityIdType } from './entity.interface';
-import { Repository } from './repository.interface';
+import { CRUDRepository } from '@project/shared/app/types';
 
-export abstract class BaseMemoryRepository<T extends Entity<EntityIdType>> implements Repository<T> {
-  protected entities: Map<T['id'], T> = new Map();
+export abstract class BaseMemoryRepository<T, I, R> implements CRUDRepository<T, I, R> {
+  protected entities: Map<T[I], T> = new Map();
 
-  public async findById(id: T['id']): Promise<T | null> {
+  public async findById(id: T[I]): Promise<R | null> {
     return this.entities.get(id) || null;
   }
 
-  public async save(entity: T): Promise<T> {
+  public async save(entity: T): Promise<R> {
     if (!entity.id) {
       entity.id = randomUUID();
     }
@@ -19,7 +18,7 @@ export abstract class BaseMemoryRepository<T extends Entity<EntityIdType>> imple
     return entity;
   }
 
-  public async update(id: T['id'], entity: T): Promise<T> {
+  public async update(id: T[I], entity: T): Promise<R> {
     if (!this.entities.has(id)) {
       throw new Error(`Entity with id ${id} does not exist`);
     }
@@ -29,7 +28,7 @@ export abstract class BaseMemoryRepository<T extends Entity<EntityIdType>> imple
     return entity;
   }
 
-  public async deleteById(id: T['id']): Promise<void> {
+  public async delete(id: T[I]): Promise<void> {
     this.entities.delete(id);
   }
 }

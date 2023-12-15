@@ -1,10 +1,9 @@
-import dayjs from 'dayjs';
 import { compare, genSalt, hash } from 'bcrypt';
 import { ExternalUser, InternalUser } from '@project/shared/app/types';
-import { Entity } from '@project/shared/core';
+import { getDate } from '@project/shared/helpers';
 import { SALT_ROUNDS } from './blog-user.constant';
 
-export class BlogUserEntity implements InternalUser, Entity<string> {
+export class BlogUserEntity implements InternalUser {
   public id: string;
   public email: string;
   public firstname: string;
@@ -39,7 +38,7 @@ export class BlogUserEntity implements InternalUser, Entity<string> {
     this.avatar = data.avatar || '';
     this.publicationsCount = 0;
     this.subscribersCount = 0;
-    this.registrationDate = dayjs().format('DD-MM-YYYY');
+    this.registrationDate = getDate();
   }
 
   public async setPassword(password: string): Promise<BlogUserEntity> {
