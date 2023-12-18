@@ -1,0 +1,40 @@
+# Create a new user
+POST http://localhost:3000/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@test.local",
+  "firstname": "Keks",
+  "lastname": "Smith",
+  "password": "123456"
+}
+
+###
+
+# Get user by ID
+GET http://localhost:3000/api/auth/b5d7ecbb-d4d9-4f1f-8f76-314c4012e4da HTTP/1.1
+
+###
+
+# Login user by email and password
+POST http://localhost:3000/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@test.local",
+  "password": "123456"
+}
+
+###
+
+# Change user password by current password and id
+POST http://localhost:3000/api/auth/update-password HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": "b5d7ecbb-d4d9-4f1f-8f76-314c4012e4da",
+  "password": "123456",
+  "newPassword": "654321"
+}
+
+###
