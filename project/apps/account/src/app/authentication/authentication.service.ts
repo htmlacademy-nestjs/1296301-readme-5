@@ -19,7 +19,7 @@ export class AuthenticationService {
 
   public async register(dto: CreateUserDto) {
     const { email, firstname, lastname, password, avatar } = dto;
-    const blogUser = { email, firstname, lastname, avatar, password };
+    const blogUser = { email, firstname, lastname, avatar, passwordHash: '' };
 
     const existUser = await this.blogUserRepository
       .findByEmail(email);

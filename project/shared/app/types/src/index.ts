@@ -1,8 +1,5 @@
 export * from './lib/user/user.interface';
-export * from './lib/user/external-user.interface';
-export * from './lib/user/internal-user.interface';
-export * from './lib/user/blog-user.interface';
-export * from './lib/user/request-with-user-payload.interface';
+export * from './lib/user/auth-user.interface';
 
 export * from './lib/post/enum/post-type-enum';
 export * from './lib/post/enum/publication-status-enum';
