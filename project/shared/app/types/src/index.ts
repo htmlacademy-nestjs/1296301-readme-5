@@ -20,11 +20,10 @@ export * from './lib/message/internal-message.interface';
 
 export * from './lib/like/like.interface';
 
-export * from './lib/repository/CRUD.repository.interface';
+export * from './lib/repository/repository.interface';
+export * from './lib/repository/entity.interface';
 
 export * from './lib/queries/search-posts.query';
 export * from './lib/queries/post-.query';
 
 export * from './lib/file/file.interface';
-
-export * from './lib/entity/entity.interface'

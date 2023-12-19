@@ -5,7 +5,7 @@ import { PublicationStatus } from '@project/shared/app/types';
 import { PostContentEntity } from '../post/post-entity/post-content-entity.type';
 
 @Injectable()
-export class PostRepository extends BaseMemoryRepository<PostContentEntity, string, PostContentType> {
+export class PostRepository extends BaseMemoryRepository<PostContentEntity> {
   public async getFullList(): Promise<PostContentType[]> {
     const entities = Array.from(this.entities.values());
     const list = entities.filter((entity) => entity.status === PublicationStatus.Published);
