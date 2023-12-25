@@ -1,8 +1,5 @@
 export * from './lib/user/user.interface';
-export * from './lib/user/external-user.interface';
-export * from './lib/user/internal-user.interface';
-export * from './lib/user/blog-user.interface';
-export * from './lib/user/request-with-user-payload.interface';
+export * from './lib/user/auth-user.interface';
 
 export * from './lib/post/enum/post-type-enum';
 export * from './lib/post/enum/publication-status-enum';
@@ -20,11 +17,10 @@ export * from './lib/message/internal-message.interface';
 
 export * from './lib/like/like.interface';
 
-export * from './lib/repository/CRUD.repository.interface';
+export * from './lib/repository/repository.interface';
+export * from './lib/repository/entity.interface';
 
 export * from './lib/queries/search-posts.query';
 export * from './lib/queries/post-.query';
 
 export * from './lib/file/file.interface';
-
-export * from './lib/entity/entity.interface'

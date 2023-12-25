@@ -1,10 +1,11 @@
 import { compare, genSalt, hash } from 'bcrypt';
-import { ExternalUser, InternalUser } from '@project/shared/app/types';
+import { AuthUser } from '@project/shared/app/types';
 import { getDate } from '@project/shared/helpers';
 import { SALT_ROUNDS } from './blog-user.constant';
+import { Entity } from '@project/shared/app/types';
 
-export class BlogUserEntity implements InternalUser {
-  public id: string;
+export class BlogUserEntity implements AuthUser, Entity<string> {
+  public id?: string;
   public email: string;
   public firstname: string;
   public lastname: string;
@@ -14,7 +15,7 @@ export class BlogUserEntity implements InternalUser {
   public subscribersCount: number;
   public passwordHash: string;
 
-  constructor(user: ExternalUser) {
+  constructor(user: AuthUser) {
     this.populate(user);
   }
 
@@ -31,7 +32,7 @@ export class BlogUserEntity implements InternalUser {
     };
   }
 
-  public populate(data: ExternalUser): void {
+  public populate(data: AuthUser): void {
     this.email = data.email;
     this.firstname = data.firstname;
     this.lastname = data.lastname;
@@ -39,6 +40,7 @@ export class BlogUserEntity implements InternalUser {
     this.publicationsCount = 0;
     this.subscribersCount = 0;
     this.registrationDate = getDate();
+    this.passwordHash = data.passwordHash;
   }
 
   public async setPassword(password: string): Promise<BlogUserEntity> {
@@ -50,5 +52,9 @@ export class BlogUserEntity implements InternalUser {
 
   public async comparePassword(password: string): Promise<boolean> {
     return compare(password, this.passwordHash);
+  }
+
+  static fromObject(data: AuthUser): BlogUserEntity {
+    return new BlogUserEntity(data);
   }
 }

@@ -17,7 +17,7 @@ export abstract class PostEntity implements Post {
   public likesCount: number;
   public messagesCount: number;
 
-  constructor(postData: Post) {
+  protected constructor(postData: Post) {
     this.id = postData.id;
     this.authorId = postData.authorId;
     this.originalAuthorId = postData.originalAuthorId;
@@ -32,7 +32,7 @@ export abstract class PostEntity implements Post {
     this.messagesCount = postData.messagesCount || DEFAULT_AMOUNT;
   }
 
-  public toObject() {
+  public toPOJO() {
     return {...this};
   }
 }

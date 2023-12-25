@@ -18,7 +18,7 @@ export class FileEntity implements Entity<FileEntity>, File {
     this.size = entity.size;
   }
 
-  public toObject(): FileEntity {
+  public toPOJO(): FileEntity {
     return {
       ...this,
     }
