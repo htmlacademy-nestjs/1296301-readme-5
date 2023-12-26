@@ -3,9 +3,70 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "../../../../node_modules/.prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Post {
+  id             String    @id @default(uuid())
+  userId         String    @map("user_id")
+  type           String
+  status         String    @default("draft")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  publicatedAt   DateTime  @updatedAt @map("publicated_at")
+  isRepost       Boolean   @default(false) @map("is_repost")
+  tags           Tag[]
+  likes          Like[]
+  messages       Message[]
+  likesCount     Int       @default(0) @map("likes_count")
+  messagesCount  Int       @default(0) @map("messages_count")
+  originalUserId String    @map("original_user_id")
+  originalPostId String    @map("original_post_id")
+  title          String
+  description    String
+  link           String
+  announcement   String
+  photo          String
+  quoteAuthor    String    @map("quote_author")
+
+  @@index([title])
+  @@map("posts")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  message   String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId    String   @map("post_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("messages")
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("likes")
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  tag       String
+  posts     Post[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([tag])
+  @@map("tags")
 }

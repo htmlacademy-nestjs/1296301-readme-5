@@ -7,8 +7,8 @@ export interface Post {
   authorId?: string;
   originalAuthorId?: string;
   type: PostType;
-  creationDate: string;
-  publicationDate: string;
+  createdAt: string;
+  publicatedAt: string;
   status: PublicationStatus;
   isRepost: boolean;
   tags?: string[];
