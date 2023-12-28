@@ -8,12 +8,12 @@ export class QuotePostRdo extends PostRdo {
     example: 'Quote'
   })
   @Expose()
-  public text: string;
+  public description: string;
 
   @ApiProperty({
     description: 'Quote author name',
     example: 'Author'
   })
   @Expose()
-  public author: string;
+  public quoteAuthor: string;
 }

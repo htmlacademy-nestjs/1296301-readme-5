@@ -7,8 +7,7 @@ import { Entity } from '@project/shared/app/types';
 export class BlogUserEntity implements AuthUser, Entity<string> {
   public id?: string;
   public email: string;
-  public firstname: string;
-  public lastname: string;
+  public userName: string;
   public registrationDate: string;
   public avatar?: string;
   public publicationsCount: number;
@@ -24,8 +23,7 @@ export class BlogUserEntity implements AuthUser, Entity<string> {
       id: this.id,
       email: this.email,
       avatar: this.avatar,
-      firstname: this.firstname,
-      lastname: this.lastname,
+      userName: this.userName,
       registrationDate: this.registrationDate,
       publicationsCount: this.publicationsCount,
       subscribersCount: this.subscribersCount,
@@ -34,8 +32,7 @@ export class BlogUserEntity implements AuthUser, Entity<string> {
 
   public populate(data: AuthUser): void {
     this.email = data.email;
-    this.firstname = data.firstname;
-    this.lastname = data.lastname;
+    this.userName = data.userName;
     this.avatar = data.avatar || '';
     this.publicationsCount = 0;
     this.subscribersCount = 0;

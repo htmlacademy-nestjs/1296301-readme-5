@@ -6,7 +6,7 @@ export class CreateTextPostDto extends CreatePostDto {
     description: 'Text of post',
     example: 'Text'
   })
-  public text: string;
+  public description: string;
 
   @ApiProperty({
     description: 'Title of post',

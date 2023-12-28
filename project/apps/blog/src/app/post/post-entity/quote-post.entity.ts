@@ -2,8 +2,8 @@ import { QuotePost } from '@project/shared/app/types';
 import { PostEntity } from './post.entity';
 
 export class QuotePostEntity extends PostEntity implements QuotePost {
-  public text: string;
-  public author: string;
+  public description: string;
+  public quoteAuthor: string;
 
   constructor(postData: QuotePost) {
     super(postData);
@@ -11,7 +11,7 @@ export class QuotePostEntity extends PostEntity implements QuotePost {
   }
 
   public fillEntity(postData: QuotePost) {
-    this.text = postData.text;
-    this.author = postData.author;
+    this.description = postData.description;
+    this.quoteAuthor = postData.quoteAuthor;
   }
 }

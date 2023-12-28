@@ -8,7 +8,7 @@ export class TextPostRdo extends PostRdo {
     example: 'Text'
   })
   @Expose()
-  public text: string;
+  public description: string;
 
   @ApiProperty({
     description: 'Title of post',

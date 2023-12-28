@@ -24,18 +24,11 @@ export class UserRdo {
   public avatar?: string;
 
   @ApiProperty({
-    description: 'User first name',
+    description: 'User name',
     example: 'Keks'
   })
   @Expose()
-  public firstname: string;
-
-  @ApiProperty({
-    description: 'User last name',
-    example: 'Keks'
-  })
-  @Expose()
-  public lastname: string;
+  public userName: string;
 
   @ApiProperty({
     description: 'User registration date (ISO format)',

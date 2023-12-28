@@ -12,15 +12,13 @@ export * from './lib/post/photo-post.interface';
 export * from './lib/post/quote-post.interface';
 export * from './lib/post/post-content.type';
 
-export * from './lib/message/external-message.interface';
-export * from './lib/message/internal-message.interface';
+export * from './lib/message/message.interface';
 
 export * from './lib/like/like.interface';
 
+export * from './lib/tag/tag.interface';
+
 export * from './lib/repository/repository.interface';
 export * from './lib/repository/entity.interface';
-
-export * from './lib/queries/search-posts.query';
-export * from './lib/queries/post-.query';
 
 export * from './lib/file/file.interface';

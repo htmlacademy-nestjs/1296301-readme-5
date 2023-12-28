@@ -11,27 +11,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PostType {
+  video
+  text
+  quote
+  photo
+  link
+}
+
+enum PostStatus {
+  published
+  draft
+}
+
 model Post {
-  id             String    @id @default(uuid())
-  userId         String    @map("user_id")
-  type           String
-  status         String    @default("draft")
-  createdAt      DateTime  @default(now()) @map("created_at")
-  publicatedAt   DateTime  @updatedAt @map("publicated_at")
-  isRepost       Boolean   @default(false) @map("is_repost")
-  tags           Tag[]
-  likes          Like[]
-  messages       Message[]
-  likesCount     Int       @default(0) @map("likes_count")
-  messagesCount  Int       @default(0) @map("messages_count")
-  originalUserId String    @map("original_user_id")
-  originalPostId String    @map("original_post_id")
-  title          String
-  description    String
-  link           String
-  announcement   String
-  photo          String
-  quoteAuthor    String    @map("quote_author")
+  id              String     @id @default(uuid()) @map("id")
+  userId          String?    @map("user_id")
+  type            PostType
+  status          PostStatus @default(draft)
+  createdAt       DateTime   @default(now()) @map("created_at")
+  publicatedAt    DateTime   @updatedAt @map("publicated_at")
+  isRepost        Boolean    @default(false) @map("is_repost")
+  tags            Tag[]
+  likes           Like[]
+  messages        Message[]
+  likesCount      Int        @default(0) @map("likes_count")
+  messagesCount   Int        @default(0) @map("messages_count")
+  originalUserId  String?    @map("original_user_id")
+  originalPostId  String?    @map("original_post_id")
+  title           String?
+  description     String?
+  link            String?
+  announcement    String?
+  quoteAuthor     String?    @map("quote_author")
 
   @@index([title])
   @@map("posts")

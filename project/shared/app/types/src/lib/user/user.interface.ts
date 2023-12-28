@@ -4,7 +4,6 @@ export interface User {
   publicationsCount?: number;
   subscribersCount?: number;
   email: string;
-  firstname: string;
-  lastname: string;
+  userName: string;
   avatar?: string;
 }

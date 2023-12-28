@@ -13,8 +13,8 @@ export class PostRdo {
     description: 'Unique post ID if reposted',
     example: '1'
   })
-  @Expose({ name: 'originalId' })
-  public originalId: string;
+  @Expose({ name: 'originalPostId' })
+  public originalPostId: string;
 
   @ApiProperty({
     description: 'Post type',
@@ -27,8 +27,8 @@ export class PostRdo {
     description: 'Post author ID',
     example: '1'
   })
-  @Expose({ name: 'authorId' })
-  public authorId: string;
+  @Expose({ name: 'userId' })
+  public userId: string;
 
   @ApiProperty({
     description: 'Post author ID if reposted',
@@ -41,13 +41,13 @@ export class PostRdo {
     description: 'Date post was created',
   })
   @Expose()
-  public creationDate: string;
+  public createdAt: string;
 
   @ApiProperty({
     description: 'Date post was published',
   })
   @Expose()
-  public publicationDate: string;
+  public publicatedAt: string;
 
   @ApiProperty({
     description: 'Post status',

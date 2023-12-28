@@ -1,5 +1,4 @@
-import { Body, Req, Controller, Param, Post, Delete, Patch, HttpStatus } from '@nestjs/common';
-import { RequestWithUserPayload } from '@project/shared/app/types';
+import { Body, Controller, Param, Post, Delete, Patch, HttpStatus } from '@nestjs/common';
 import { PostService } from './post.service';
 import { PostPath, PostMessages, PostsError, API_TAG_NAME } from './constants/post.constant';
 import { ContentPostDto } from './dto/content-dto.type';
@@ -28,10 +27,8 @@ export class PostController {
   })
   @Post(PostPath.Add)
   public async create(
-    @Req() { user }: RequestWithUserPayload,
     @Body() dto: ContentPostDto) {
-    const userId = user.id;
-    const post = await this.postsService.create(dto, userId);
+    const post = await this.postsService.create(dto);
 
     return adaptRdoPost(post);
   }
@@ -43,12 +40,10 @@ export class PostController {
   })
   @Patch(PostPath.Id)
   public async update(
-    @Req() { user }: RequestWithUserPayload,
     @Param('id') id: string,
     @Body() dto: ContentPostDto,
   ) {
-    const userId = user.id;
-    const post = await this.postsService.update(id, dto, userId);
+    const post = await this.postsService.update(id, dto);
 
     return adaptRdoPost(post);
   }
@@ -61,10 +56,8 @@ export class PostController {
   @Post(PostPath.Repost)
   public async repost(
     @Param('id') id: string,
-    @Req() { user }: RequestWithUserPayload,
   ) {
-    const userId = user.id;
-    const post = await this.postsService.repost(id, userId);
+    const post = await this.postsService.repost(id);
 
     return adaptRdoPost(post);
   }
@@ -80,10 +73,7 @@ export class PostController {
   @Delete(PostPath.Id)
   public async delete(
     @Param('id') id: string,
-    @Req() { user }: RequestWithUserPayload
   ) {
-    const userId = user.id;
-
-    return await this.postsService.remove(id, userId);
+    return await this.postsService.remove(id);
   }
 }
