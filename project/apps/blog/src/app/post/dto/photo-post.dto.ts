@@ -6,5 +6,5 @@ export class CreatePhotoPostDto extends CreatePostDto {
     description: 'Post photo id',
     example: '/images/user.png',
   })
-  public photo: string;
+  public link: string;
 }

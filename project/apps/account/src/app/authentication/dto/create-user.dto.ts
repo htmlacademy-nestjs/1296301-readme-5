@@ -11,13 +11,7 @@ export class CreateUserDto {
     description: 'User first name',
     example: 'Keks',
   })
-  public firstname: string;
-
-  @ApiProperty({
-    description: 'User last name',
-    example: 'Ivanov',
-  })
-  public lastname: string;
+  public userName: string;
 
   @ApiProperty({
     description: 'User avatar',

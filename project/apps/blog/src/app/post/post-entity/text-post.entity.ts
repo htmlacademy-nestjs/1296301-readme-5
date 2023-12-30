@@ -2,7 +2,7 @@ import { TextPost } from '@project/shared/app/types';
 import { PostEntity } from './post.entity';
 
 export class TextPostEntity extends PostEntity implements TextPost {
-  public text: string;
+  public description: string;
   public title: string;
   public announcement: string;
 
@@ -12,7 +12,7 @@ export class TextPostEntity extends PostEntity implements TextPost {
   }
 
   public fillEntity(postData: TextPost) {
-    this.text = postData.text;
+    this.description = postData.description;
     this.title = postData.title;
     this.announcement = postData.announcement;
   }

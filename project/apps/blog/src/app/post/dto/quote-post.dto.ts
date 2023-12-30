@@ -6,11 +6,11 @@ export class CreateQuotePostDto extends CreatePostDto {
     description: 'Text of quote',
     example: 'Quote text'
   })
-  public text: string;
+  public description: string;
 
   @ApiProperty({
     description: 'Quote author name',
     example: 'Author'
   })
-  public author: string;
+  public quoteAuthor: string;
 }

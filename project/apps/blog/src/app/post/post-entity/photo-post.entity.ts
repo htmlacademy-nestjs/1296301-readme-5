@@ -2,7 +2,7 @@ import { PhotoPost } from '@project/shared/app/types';
 import { PostEntity } from './post.entity';
 
 export class PhotoPostEntity extends PostEntity implements PhotoPost {
-  public photo: string;
+  public link: string;
 
   constructor(postData: PhotoPost) {
     super(postData);
@@ -10,6 +10,6 @@ export class PhotoPostEntity extends PostEntity implements PhotoPost {
   }
 
   public fillEntity(postData: PhotoPost) {
-    this.photo = postData.photo;
+    this.link = postData.link;
   }
 }

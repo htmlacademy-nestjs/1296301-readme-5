@@ -8,6 +8,12 @@ export class CreatePostDto {
   public type: string;
 
   @ApiProperty({
+    description: 'User id of post',
+    example: 'text'
+  })
+  public userId: string;
+
+  @ApiProperty({
     description: 'Status of post',
     example: 'published'
   })

@@ -15,7 +15,7 @@ export class PostRepository extends BaseMemoryRepository<PostContentEntity> {
 
   public async searchByUserId(userId: string): Promise<PostContentType[]> {
     const entities = Array.from(this.entities.values());
-    const list = entities.filter((entity) => entity.authorId === userId);
+    const list = entities.filter((entity) => entity.userId === userId);
 
     return Promise.resolve(list);
   }

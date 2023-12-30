@@ -12,12 +12,9 @@ export class PostService {
     private readonly postRepository: PostRepository,
   ) { }
 
-  public async create(dto: ContentPostDto, userId: string) {
+  public async create(dto: ContentPostDto) {
     const post = {
       ...dto,
-      authorId: userId,
-      creationDate: getDate(),
-      publicationDate: getDate(),
       status: PublicationStatus.Published,
       likesCount: DEFAULT_AMOUNT,
       messagesCount: DEFAULT_AMOUNT,
@@ -28,10 +25,10 @@ export class PostService {
     return this.postRepository.save(postEntity);
   }
 
-  public async update(postId: string, dto: ContentPostDto, userId: string) {
+  public async update(postId: string, dto: ContentPostDto) {
     const post = await this.findByPostId(postId);
 
-    if (userId !== post.authorId) {
+    if (dto.userId !== post.userId) {
       throw new BadRequestException(PostsError.NotUserAuthor)
     }
 
@@ -51,7 +48,7 @@ export class PostService {
     return post;
   }
 
-  public async repost(id: string, userId: string) {
+  public async repost(id: string) {
     const originalPost = await this.findByPostId(id);
 
     if (originalPost.isRepost) {
@@ -61,9 +58,8 @@ export class PostService {
     const post = {
       ...originalPost as ContentPostDto,
       isRepost: true,
-      authorId: userId,
-      originalUserId: originalPost.authorId,
-      originalId: originalPost.id,
+      originalUserId: originalPost.userId,
+      originalPostId: originalPost.id,
       publicationDate: getDate(),
       likesCount: DEFAULT_AMOUNT,
       messagesCount: DEFAULT_AMOUNT,
@@ -73,13 +69,7 @@ export class PostService {
     return this.postRepository.save(postEntity);
   }
 
-  public async remove(postId: string, userId: string) {
-    const post = await this.findByPostId(postId);
-
-    if (userId !== post.authorId) {
-      throw new BadRequestException(PostsError.NotUserAuthor)
-    }
-
+  public async remove(postId: string) {
     return this.postRepository.delete(postId);
   }
 }
