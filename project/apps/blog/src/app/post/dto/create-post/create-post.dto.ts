@@ -4,4 +4,5 @@ import { CreateVideoPostDto } from './video-post.dto';
 import { CreateQuotePostDto } from './quote-post.dto';
 import { CreateTextPostDto } from './text-post.dto';
 
-export type ContentPostDto = CreateLinkPostDto | CreatePhotoPostDto | CreateQuotePostDto | CreateTextPostDto | CreateVideoPostDto;
+export type CreatePostDto = CreateLinkPostDto | CreatePhotoPostDto | CreateQuotePostDto | CreateTextPostDto | CreateVideoPostDto;
+

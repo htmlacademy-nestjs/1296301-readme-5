@@ -28,15 +28,13 @@ model Post {
   id              String     @id @default(uuid()) @map("id")
   userId          String?    @map("user_id")
   type            PostType
-  status          PostStatus @default(draft)
+  status          PostStatus @default(published)
   createdAt       DateTime   @default(now()) @map("created_at")
   publicatedAt    DateTime   @updatedAt @map("publicated_at")
   isRepost        Boolean    @default(false) @map("is_repost")
-  tags            Tag[]
+  tags            String[]
   likes           Like[]
   messages        Message[]
-  likesCount      Int        @default(0) @map("likes_count")
-  messagesCount   Int        @default(0) @map("messages_count")
   originalUserId  String?    @map("original_user_id")
   originalPostId  String?    @map("original_post_id")
   title           String?
@@ -70,15 +68,4 @@ model Like {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("likes")
-}
-
-model Tag {
-  id        String   @id @default(uuid())
-  tag       String
-  posts     Post[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@index([tag])
-  @@map("tags")
 }

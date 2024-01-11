@@ -1,8 +1,8 @@
-import { PostRdo } from './post.rdo';
+import { BasePostRdo } from './base-post.rdo';
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class VideoPostRdo extends PostRdo {
+export class VideoPostRdo extends BasePostRdo {
   @ApiProperty({
     description: 'Title of post',
     example: 'Title',

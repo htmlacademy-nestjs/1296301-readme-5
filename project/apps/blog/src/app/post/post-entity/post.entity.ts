@@ -1,45 +1,58 @@
 import { Post } from '@project/shared/app/types';
-import { Tag } from '@project/shared/app/types';
+import { Entity } from "@project/shared/app/types";
 import { Message } from '@project/shared/app/types';
-import { Like } from '@project/shared/app/types';
 import { PostType } from '@project/shared/app/types';
 import { PublicationStatus } from '@project/shared/app/types';
 import { DEFAULT_AMOUNT, DEFAULT_STATUS } from '../constants/post.constant';
 
-export abstract class PostEntity implements Post {
+export abstract class PostEntity implements Post, Entity<string, Post> {
   public id?: string;
-  public userId?: string;
+  public userId: string;
   public originalUserId?: string;
   public originalPostId?: string;
   public type: PostType;
-  public createdAt: Date;
-  public publicatedAt: Date;
+  public createdAt?: Date;
+  public publicatedAt?: Date;
   public status: PublicationStatus;
   public isRepost: boolean;
-  public tags: Tag[];
+  public tags?: string[];
   public likesCount: number;
   public messagesCount: number;
-  public likes: Like[];
   public messages: Message[];
 
-  protected constructor(postData: Post) {
-    this.id = postData.id;
-    this.userId = postData.userId;
-    this.originalUserId = postData.originalUserId;
-    this.originalPostId = postData.originalPostId;
-    this.type = postData.type;
-    this.createdAt = postData.createdAt;
-    this.publicatedAt = postData.publicatedAt;
-    this.status = postData.status;
-    this.isRepost = postData.isRepost || DEFAULT_STATUS;
-    this.tags = postData.tags;
-    this.likesCount = postData.likesCount || DEFAULT_AMOUNT;
-    this.messagesCount = postData.messagesCount || DEFAULT_AMOUNT;
-    this.messages = postData.messages;
-    this.likes = postData.likes
+  public populate(data: Post): PostEntity {
+    this.id = data.id ?? undefined;
+    this.userId = data.userId;
+    this.originalUserId = data.originalUserId ?? undefined;
+    this.originalPostId = data.originalPostId ?? undefined;
+    this.type = data.type;
+    this.createdAt = data.createdAt ?? undefined;
+    this.publicatedAt = data.publicatedAt ?? undefined;
+    this.status = data.status;
+    this.isRepost = data.isRepost ?? DEFAULT_STATUS;
+    this.likesCount = data.likesCount ?? DEFAULT_AMOUNT;
+    this.messagesCount = data.messagesCount ?? DEFAULT_AMOUNT;
+    this.tags = data.tags ?? [];
+    this.messages = [];
+
+    return this;
   }
 
-  public toPOJO() {
-    return {...this};
+  public toPOJO(): Post {
+    return {
+      id: this.id,
+      userId: this.userId,
+      originalUserId: this.originalUserId,
+      originalPostId: this.originalPostId,
+      type: this.type,
+      createdAt: this.createdAt,
+      publicatedAt: this.publicatedAt,
+      status: this.status,
+      isRepost: this.isRepost,
+      likesCount: this.likesCount,
+      messagesCount: this.messagesCount,
+      tags: this.tags,
+      messages: [],
+    };
   }
 }

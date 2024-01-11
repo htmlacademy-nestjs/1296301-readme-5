@@ -16,9 +16,10 @@ export * from './lib/message/message.interface';
 
 export * from './lib/like/like.interface';
 
-export * from './lib/tag/tag.interface';
-
 export * from './lib/repository/repository.interface';
 export * from './lib/repository/entity.interface';
 
 export * from './lib/file/file.interface';
+
+export * from './lib/pagination/pagination.interface';
+export * from './lib/pagination/sort-direction.interface';

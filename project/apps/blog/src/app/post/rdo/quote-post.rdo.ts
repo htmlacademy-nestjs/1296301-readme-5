@@ -1,8 +1,8 @@
-import { PostRdo } from './post.rdo';
+import { BasePostRdo } from './base-post.rdo';
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class QuotePostRdo extends PostRdo {
+export class QuotePostRdo extends BasePostRdo {
   @ApiProperty({
     description: 'Text of quote',
     example: 'Quote'
