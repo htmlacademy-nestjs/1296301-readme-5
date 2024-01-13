@@ -1,5 +1,5 @@
-import { PostType } from './enum/post-type-enum';
-import { PublicationStatus } from './enum/publication-status-enum';
+import { PostType } from './enum/post-type.enum';
+import { PublicationStatus } from './enum/publication-status.enum';
 import { Message } from '../message/message.interface';
 
 export interface Post {

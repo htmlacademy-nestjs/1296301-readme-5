@@ -1,5 +1,13 @@
+import { SortDirection } from "@project/shared/app/types";
+import { SortBy } from "@project/shared/app/types";
+
 export const DEFAULT_AMOUNT = 0;
 export const DEFAULT_STATUS = false;
+export const DEFAULT_POST_COUNT_LIMIT = 25;
+export const DEFAULT_POST_SEARCH_COUNT_LIMIT = 20;
+export const DEFAULT_SORT_DIRECTION = SortDirection.Desc;
+export const DEFAULT_SORT_BY = SortBy.CreatedAt;
+export const DEFAULT_PAGE_COUNT = 1;
 
 export const  API_TAG_NAME ='Posts';
 
@@ -20,7 +28,7 @@ export const PostsError = {
 
 export const PostPath = {
   Main:'Post',
-  Repost:':id/repost',
-  Add:'add',
-  Id: ':id'
+  Repost:'/:id/repost',
+  Add:'/add',
+  Id: '/:id'
 } as const;

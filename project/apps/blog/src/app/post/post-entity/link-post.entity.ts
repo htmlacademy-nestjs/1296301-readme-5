@@ -6,9 +6,13 @@ export class LinkPostEntity extends PostEntity implements LinkPost, Entity<strin
   public link: string;
   public description: string;
 
-  public populate(postData: LinkPost): LinkPostEntity {
-    super.populate(postData);
+  constructor(post: LinkPost) {
+    super(post);
 
+    this.populate(post);
+  }
+
+  public populate(postData: LinkPost): LinkPostEntity {
     this.link = postData.link;
     this.description = postData.description;
 
@@ -21,9 +25,5 @@ export class LinkPostEntity extends PostEntity implements LinkPost, Entity<strin
       description: this.description,
       link: this.link,
     };
-  }
-
-  static fromObject(data: LinkPost): PostEntity {
-    return new LinkPostEntity().populate(data);
   }
 }

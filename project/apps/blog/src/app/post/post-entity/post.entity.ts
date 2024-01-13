@@ -20,6 +20,10 @@ export abstract class PostEntity implements Post, Entity<string, Post> {
   public messagesCount: number;
   public messages: Message[];
 
+  protected constructor(post: Post) {
+    this.populate(post);
+  }
+
   public populate(data: Post): PostEntity {
     this.id = data.id ?? undefined;
     this.userId = data.userId;

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, IsArray, IsNotEmpty } from 'class-validator';
-import { PostType } from '@project/shared/app/types';
+import { PublicationStatus } from "@project/shared/app/types";
 
 export class UpdateBasePostDto {
   @ApiProperty({
@@ -9,7 +9,7 @@ export class UpdateBasePostDto {
   })
   @IsString()
   @IsNotEmpty()
-  @IsEnum(PostType)
+  @IsEnum(PublicationStatus)
   @IsOptional()
   public status?: string;
 

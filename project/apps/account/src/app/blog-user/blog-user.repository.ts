@@ -5,9 +5,10 @@ import { Model } from 'mongoose';
 import { BaseMongoRepository } from '@project/shared/core';
 import { BlogUserEntity } from './blog-user.entity';
 import { BlogUserModel } from './blog-user.model';
+import { EntityIdType } from '@project/shared/app/types';
 
 @Injectable()
-export class BlogUserRepository extends BaseMongoRepository<BlogUserEntity, BlogUserModel> {
+export class BlogUserRepository extends BaseMongoRepository<BlogUserEntity, EntityIdType, BlogUserModel> {
   constructor(
     @InjectModel(BlogUserModel.name) blogUserModel: Model<BlogUserModel>
   ) {

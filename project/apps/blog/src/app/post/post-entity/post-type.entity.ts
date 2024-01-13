@@ -6,9 +6,9 @@ import { QuotePostEntity } from './quote-post.entity';
 import { TextPostEntity } from './text-post.entity';
 
 export const PostTypeEntity = {
-  [PostType.link]: LinkPostEntity,
-  [PostType.photo]: PhotoPostEntity,
-  [PostType.quote]: QuotePostEntity,
-  [PostType.text]: TextPostEntity,
-  [PostType.video]: VideoPostEntity
+  [PostType.Link]: LinkPostEntity,
+  [PostType.Photo]: PhotoPostEntity,
+  [PostType.Quote]: QuotePostEntity,
+  [PostType.Text]: TextPostEntity,
+  [PostType.Video]: VideoPostEntity
 }

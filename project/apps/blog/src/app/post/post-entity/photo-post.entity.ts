@@ -5,9 +5,13 @@ import { Entity } from "@project/shared/app/types";
 export class PhotoPostEntity extends PostEntity implements PhotoPost, Entity<string, PhotoPost> {
   public link: string;
 
-  public populate(postData: PhotoPost): PhotoPostEntity {
-    super.populate(postData);
+  constructor(post: PhotoPost) {
+    super(post);
 
+    this.populate(post);
+  }
+
+  public populate(postData: PhotoPost): PhotoPostEntity {
     this.link = postData.link;
 
     return this;
@@ -18,9 +22,5 @@ export class PhotoPostEntity extends PostEntity implements PhotoPost, Entity<str
       ...super.toPOJO(),
       link: this.link,
     };
-  }
-
-  static fromObject(data: PhotoPost): PhotoPostEntity {
-    return new PhotoPostEntity().populate(data);
   }
 }

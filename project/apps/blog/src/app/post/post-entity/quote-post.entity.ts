@@ -6,9 +6,13 @@ export class QuotePostEntity extends PostEntity implements QuotePost, Entity<str
   public description: string;
   public quoteAuthor: string;
 
-  public populate(data: QuotePost): QuotePostEntity {
-    super.populate(data);
+  constructor(post: QuotePost) {
+    super(post);
 
+    this.populate(post);
+  }
+
+  public populate(data: QuotePost): QuotePostEntity {
     this.description = data.description;
     this.quoteAuthor = data.quoteAuthor;
 
@@ -21,9 +25,5 @@ export class QuotePostEntity extends PostEntity implements QuotePost, Entity<str
       description: this.description,
       quoteAuthor: this.quoteAuthor,
     };
-  }
-
-  static fromObject(data: QuotePost): QuotePostEntity {
-    return new QuotePostEntity().populate(data);
   }
 }

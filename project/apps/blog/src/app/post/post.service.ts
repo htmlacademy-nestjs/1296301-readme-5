@@ -1,75 +1,101 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PostRepository } from '../post-repository/post-repository';
-import { DEFAULT_AMOUNT, PostsError } from './constants/post.constant';
-import { ContentPostDto } from './dto/content-dto.type';
+import { PostRepository } from './post.repository';
+import { PostsError } from './constants/post.constant';
+import { CreatePostDto } from './dto/create-post/create-post.dto';
 import { PostTypeEntity } from './post-entity/post-type.entity';
-import { PublicationStatus } from '@project/shared/app/types';
-import { getDate } from '@project/shared/helpers';
+import { PostContentType } from "@project/shared/app/types";
+import { PostContentEntity } from "./post-entity/post-content-entity.type";
+import { PostQuery } from "./query/post.query";
+import { SearchQuery } from "./query/search.query";
+import { PaginationResult} from "@project/shared/app/types";
+import { UpdatePostDto } from "./dto/update-post/update-post.dto";
 
 @Injectable()
 export class PostService {
   constructor(
     private readonly postRepository: PostRepository,
-  ) { }
+  ) {}
 
-  public async create(dto: ContentPostDto) {
-    const post = {
-      ...dto,
-      status: PublicationStatus.Published,
-      likesCount: DEFAULT_AMOUNT,
-      messagesCount: DEFAULT_AMOUNT,
-      isRepost: false,
+  public async createPost(dto: CreatePostDto): Promise<PostContentEntity> {
+    const postType = dto.type;
+    const newPost = new PostTypeEntity[postType](dto);
+
+    await this.postRepository.save(newPost);
+
+    return newPost;
+  }
+
+  public async deletePost(id: string): Promise<void> {
+    try {
+      await this.postRepository.deleteById(id);
+    } catch {
+      throw new NotFoundException(`Post with ID ${id} not found`);
+    }
+  }
+
+  public async getPost(id: string): Promise<PostContentEntity> {
+    const record = await this.postRepository.findById(id);
+
+    return new PostTypeEntity[record.type];
+  }
+
+  public async getAllPosts(query?: PostQuery): Promise<PaginationResult<PostContentEntity>> {
+    const { entities, ...params } = await this.postRepository.find(query);
+
+    return {
+      entities: entities.map((document: PostContentType): PostContentEntity => {
+        return new PostTypeEntity[document.type](document);
+      }),
+      ...params,
     };
-    const postEntity = await new PostTypeEntity[post.type](post);
-
-    return this.postRepository.save(postEntity);
   }
 
-  public async update(postId: string, dto: ContentPostDto) {
-    const post = await this.findByPostId(postId);
+  public async updatePost(id: string, dto: UpdatePostDto): Promise<PostContentEntity> {
+    const existsPost = await this.postRepository.findById(id);
+    const existsPostEntity = new PostTypeEntity[existsPost.type](existsPost);
+    let hasChanges = false;
 
-    if (dto.userId !== post.userId) {
-      throw new BadRequestException(PostsError.NotUserAuthor)
+    for (const [key, value] of Object.entries(dto)) {
+      if (value !== undefined && key !== 'categories' && existsPostEntity[key] !== value) {
+        existsPostEntity[key] = value;
+        hasChanges = true;
+      }
     }
 
-    const updatedPost = { ...post, ...dto, publicationDate: getDate() }
-    const postEntity = await new PostTypeEntity[updatedPost.type](updatedPost);
-
-    return this.postRepository.update(postId, postEntity);
-  }
-
-  public async findByPostId(id: string) {
-    const post = await this.postRepository.findById(id);
-
-    if (!post) {
-      throw new NotFoundException(PostsError.PostNotFound);
+    if (!hasChanges) {
+      return existsPostEntity;
     }
 
-    return post;
+    return this.postRepository.update(id, existsPostEntity);
   }
 
-  public async repost(id: string) {
-    const originalPost = await this.findByPostId(id);
+  public async repost(id: string, userId: string) {
+    const originalPost = await this.postRepository.findById(id);
+    const originalPostEntity = new PostTypeEntity[originalPost.type](originalPost);
 
-    if (originalPost.isRepost) {
+    if (originalPostEntity.isRepost) {
       throw new BadRequestException(PostsError.AlreadyReposted)
     }
 
-    const post = {
-      ...originalPost as ContentPostDto,
-      isRepost: true,
-      originalUserId: originalPost.userId,
-      originalPostId: originalPost.id,
-      publicationDate: getDate(),
-      likesCount: DEFAULT_AMOUNT,
-      messagesCount: DEFAULT_AMOUNT,
-    };
-    const postEntity = await new PostTypeEntity[post.type](post);
+    originalPostEntity.userId = userId;
+    originalPostEntity.isRepost = true;
+    originalPostEntity.originalPostId = originalPost.id;
+    originalPostEntity.originalUserId = originalPost.userId;
 
-    return this.postRepository.save(postEntity);
+    await this.postRepository.save(originalPostEntity);
+
+    return originalPostEntity;
   }
 
-  public async remove(postId: string) {
-    return this.postRepository.delete(postId);
+  async getUnpublishedPosts(userId: string): Promise<PostContentEntity[]> {
+    const posts = await this.postRepository.findUnpublishedPosts(userId);
+
+    return posts.map((post) => new PostTypeEntity[post.type](post));
+  }
+
+  async getPostsBySearch(search: SearchQuery): Promise<PostContentEntity[]> {
+    const posts = await this.postRepository.search(search);
+
+    return posts.map((post) => new PostTypeEntity[post.type](post));
   }
 }

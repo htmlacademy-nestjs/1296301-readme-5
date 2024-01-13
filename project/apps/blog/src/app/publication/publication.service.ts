@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PostContentType } from '@project/shared/app/types';
 import { PublicationError } from './publication.constant';
-import { PostRepository } from '../post-repository/post-repository';
+import { PostRepository } from '../post/post.repository';
 
 
 @Injectable()
@@ -18,9 +17,5 @@ export class PublicationService {
     }
 
     return post;
-  }
-
-  public async getPosts(): Promise<PostContentType[]> {
-    return this.postRepository.getFullList();
   }
 }

@@ -6,9 +6,13 @@ export class VideoPostEntity extends PostEntity implements VideoPost, Entity<str
   public title: string;
   public link: string;
 
-  public populate(postData: VideoPost): VideoPostEntity {
-    super.populate(postData);
+  constructor(post: VideoPost) {
+    super(post);
 
+    this.populate(post);
+  }
+
+  public populate(postData: VideoPost): VideoPostEntity {
     this.title = postData.title;
     this.link = postData.link;
 
@@ -21,9 +25,5 @@ export class VideoPostEntity extends PostEntity implements VideoPost, Entity<str
       title: this.title,
       link: this.link,
     };
-  }
-
-  static fromObject(data: VideoPost): VideoPostEntity {
-    return new VideoPostEntity().populate(data);
   }
 }
