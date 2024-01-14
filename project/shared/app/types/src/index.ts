@@ -20,7 +20,11 @@ export * from './lib/repository/repository.interface';
 export * from './lib/repository/entity.interface';
 
 export * from './lib/file/file.interface';
+export * from './lib/file/stored-file.interface';
 
 export * from './lib/pagination/pagination.interface';
 export * from './lib/pagination/sort-direction.interface';
 export * from './lib/pagination/sort-by.enum';
+
+export * from './lib/auth/token-payload.interface';
+export * from './lib/auth/token.interface';
