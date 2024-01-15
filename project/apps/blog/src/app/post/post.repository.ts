@@ -1,14 +1,14 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { BasePostgresRepository } from "@project/shared/core";
-import { PrismaClientService } from "@project/shared/blog/models";
-import { PostQuery } from "./query/post.query";
-import { SearchQuery } from "./query/search.query";
-import { PublicationStatus, PaginationResult, SortBy } from "@project/shared/app/types";
-import { PostContentEntity } from "./post-entity/post-content-entity.type";
-import { PostContentType } from "@project/shared/app/types";
-import { PrismaClient } from '../../../../../node_modules/.prisma/client'
-import { EntityIdType } from "@project/shared/app/types";
+import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { PrismaClient } from '../../../../../node_modules/.prisma/client';
+
+import { BasePostgresRepository } from '@project/shared/core';
+import { PrismaClientService } from '@project/shared/blog/models';
+import { PublicationStatus, PaginationResult, PostContentType, SortBy, EntityIdType } from '@project/shared/app/types';
+
+import { PostQuery } from './query/post.query';
+import { SearchQuery } from './query/search.query';
+import { PostContentEntity } from './post-entity/post-content-entity.type';
 
 @Injectable()
 export class PostRepository extends BasePostgresRepository<PostContentEntity, EntityIdType, PostContentType> {
@@ -52,6 +52,10 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       where: {
         id
       },
+      include: {
+        messages: true,
+        likes: true,
+      },
     });
   }
 
@@ -62,7 +66,6 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       },
       include: {
         messages: true,
-        likes: true,
       },
     });
 
@@ -70,11 +73,16 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       throw new NotFoundException(`Post with id:${id} not found.`);
     }
 
+    document.messagesCount = document._count.messages;
+    document.likesCount = document._count.likes;
+
+    delete document._count;
+
     return document;
   }
 
   public search({ title, limit }: SearchQuery): Promise<PostContentType[]> {
-    return this.client.post.findMany({
+    const records = this.client.post.findMany({
       where: {
         title: {
           contains: title
@@ -83,35 +91,74 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       take: limit,
       include: {
         messages: true,
-        likes: true
-      }
+      },
+      select: {
+        _count: {
+          select: {
+            messages: true,
+          },
+        },
+      },
     });
+
+    return records.map(({ _count, ...record }) => ({ ...record, likesCount: _count.likes, messages: _count.messages }));
   }
 
   public findUnpublishedPosts(userId: string): Promise<PostContentType[]> {
-    return this.client.post.findMany({
+    const records = this.client.post.findMany({
       where: {
         userId,
         status: PublicationStatus.Draft,
       },
       include: {
         messages: true,
-        likes: true,
       },
+      select: {
+        _count: {
+          select: {
+            messages: true,
+            likes: true
+          },
+        },
+      },
+    });
+
+    return records.map((record) => {
+      record.messagesCount = record._count.messages;
+      record.likesCount = record._count.likes;
+
+      delete record._count;
+
+      return record;
     });
   }
 
   public async update(id: string, entity: PostContentEntity): Promise<PostContentType> {
     const pojoEntity = entity.toPOJO();
 
-    return await this.client.post.update({
+    const record = await this.client.post.update({
       where: { id },
       data: { ...pojoEntity },
       include: {
         messages: true,
         likes: true,
-      }
+      },
+      select: {
+        _count: {
+          select: {
+            messages: true,
+            likes: true
+          },
+        },
+      },
     });
+
+    record.messagesCount = record._count.messages;
+    record.likesCount = record._count.likes;
+
+    delete record._count;
+
+    return record;
   }
 
   public async find(query?: PostQuery): Promise<PaginationResult<PostContentType>> {
@@ -138,14 +185,28 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       this.client.post.findMany({ where, orderBy, skip, take,
         include: {
           messages: true,
-          likes: true,
+        },
+        select: {
+          _count: {
+            select: {
+              messages: true,
+              likes: true
+            },
+          },
         },
       }),
       this.getPostCount(where),
     ]);
 
     return {
-      entities: records,
+      entities: records.map((record) => {
+        record.messagesCount = record._count.messages;
+        record.likesCount = record._count.likes;
+
+        delete record._count;
+
+        return record;
+      }),
       currentPage: query?.page,
       totalPages: PostRepository.calculatePostsPage(postCount, take),
       itemsPerPage: take,

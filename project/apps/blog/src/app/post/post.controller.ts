@@ -1,29 +1,40 @@
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { Get, Body, Controller, Param, Post, Delete, Patch, Query, HttpCode, HttpStatus } from '@nestjs/common';
-import { PostService } from './post.service';
-import { PostPath, API_TAG_NAME } from './constants/post.constant';
-import { CreatePostDto } from './dto/create-post/create-post.dto';
-import { UpdatePostDto } from "./dto/update-post/update-post.dto";
-import { fillDto } from "@project/shared/helpers";
-import { ApiTags } from '@nestjs/swagger';
-import { CreateTypePostRdo } from "./dto/update-post/update-post.dto";
-import { PostQuery } from "./query/post.query";
-import { SearchQuery } from "./query/search.query";
-import { PostWithPaginationRdo } from "./rdo/post-with-pagination.rdo";
 
-@ApiTags(API_TAG_NAME)
-@Controller(PostPath.Main)
+import { fillDto } from '@project/shared/helpers';
+
+import { PostService } from './post.service';
+import { PostMessages } from './constants/post.constant';
+
+import { PostQuery } from './query/post.query';
+import { SearchQuery } from './query/search.query';
+import { CreatePostDto } from './dto/create-post/create-post.dto';
+import { UpdatePostDto } from './dto/update-post/update-post.dto';
+import { CreateTypePostRdo } from './dto/update-post/update-post.dto';
+import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
+
+@ApiTags('post')
+@Controller('post')
 export class PostController {
   constructor(
     private readonly postService: PostService
   ) {}
 
-  @Get('/:id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostMessages.Show,
+  })
+  @Get(':id')
   public async show(@Param('id') id: string) {
     const post = await this.postService.getPost(id);
 
     return fillDto(CreateTypePostRdo[post.type], post.toPOJO());
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostMessages.ShowAll,
+  })
   @Get('/')
   public async index(@Query() query: PostQuery) {
     const postsWithPagination = await this.postService.getAllPosts(query);
@@ -35,14 +46,22 @@ export class PostController {
     return fillDto(PostWithPaginationRdo, result);
   }
 
-  @Get('/search')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostMessages.Search,
+  })
+  @Get('search')
   async search(@Query() query: SearchQuery) {
     const posts = await this.postService.getPostsBySearch(query);
 
     return posts.map((post) => fillDto(CreateTypePostRdo[post.type], post));
   }
 
-  @Post(PostPath.Add)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostMessages.Add,
+  })
+  @Post('add')
   public async create(
     @Body() dto: CreatePostDto) {
     const post = await this.postService.createPost(dto);
@@ -50,16 +69,24 @@ export class PostController {
     return fillDto(CreateTypePostRdo[post.type], post.toPOJO());
   }
 
-  @Post(PostPath.Repost)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostMessages.Repost,
+  })
+  @Post('/repost/:id')
   public async repost(
     @Param('id') id: string,
   ) {
-    const post = await this.postService.repost(id);
+    const post = await this.postService.repost(id, 'userId');
 
     return fillDto(CreateTypePostRdo[post.type], post.toPOJO());
   }
 
-  @Patch(PostPath.Id)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostMessages.Update,
+  })
+  @Patch(':id')
   public async update(
     @Param('id') id: string,
     @Body() dto: UpdatePostDto,
@@ -69,8 +96,12 @@ export class PostController {
     return fillDto(CreateTypePostRdo[updatedPost.type], updatedPost.toPOJO());
   }
 
-  @Delete(PostPath.Id)
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: PostMessages.Remove,
+  })
   @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id')
   public async destroy(
     @Param('id') id: string,
   ) {
