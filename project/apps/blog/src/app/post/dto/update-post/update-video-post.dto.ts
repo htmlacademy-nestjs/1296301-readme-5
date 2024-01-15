@@ -1,11 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsUrl } from "class-validator";
-import { UpdateBasePostDto } from "./update-base-post.dto";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
+
+import { UpdateBasePostDto } from './update-base-post.dto';
 
 export class UpdateVideoPostDto extends UpdateBasePostDto {
   @ApiProperty({
     description: 'Title of post',
-    example: 'Title'
+    example: 'Title',
   })
   @IsNotEmpty()
   @IsOptional()
@@ -13,7 +14,7 @@ export class UpdateVideoPostDto extends UpdateBasePostDto {
 
   @ApiProperty({
     description: 'Youtube link',
-    example: 'https://www.youtube.com/watch?v=piqdKWNnqBo'
+    example: 'https://www.youtube.com/watch?v=piqdKWNnqBo',
   })
   @IsUrl()
   @IsNotEmpty()

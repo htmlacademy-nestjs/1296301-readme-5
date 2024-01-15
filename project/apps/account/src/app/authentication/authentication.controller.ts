@@ -1,13 +1,16 @@
 import { Controller, Post, Get, Body, Param, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+
+import { fillDto } from '@project/shared/helpers';
+import { MongoIdValidationPipe } from '@project/shared/core';
+
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { fillDto } from '@project/shared/helpers';
 import { UserRdo } from './rdo/user.rdo';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ChangePasswordUserDto } from './dto/change-password-user.dto';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
-import { MongoIdValidationPipe } from "@project/shared/core";
+
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('authentication')

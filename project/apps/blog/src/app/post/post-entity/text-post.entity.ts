@@ -1,6 +1,6 @@
-import { TextPost } from "@project/shared/app/types";
+import { TextPost, Entity } from '@project/shared/app/types';
+
 import { PostEntity } from './post.entity';
-import { Entity } from "@project/shared/app/types";
 
 export class TextPostEntity extends PostEntity implements TextPost, Entity<string, TextPost> {
   public description: string;

@@ -1,7 +1,8 @@
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { PostType, SortBy, SortDirection } from "@project/shared/app/types";
 import { IsIn, IsNumber, IsOptional } from 'class-validator';
+
+import { PostType, SortBy, SortDirection } from '@project/shared/app/types';
 
 import { DEFAULT_PAGE_COUNT, DEFAULT_POST_COUNT_LIMIT, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_BY } from '../constants/post.constant';
 
@@ -9,7 +10,7 @@ import { DEFAULT_PAGE_COUNT, DEFAULT_POST_COUNT_LIMIT, DEFAULT_SORT_DIRECTION, D
 export class PostQuery {
   @ApiProperty({
     description: 'Limit',
-    example: 25
+    example: 25,
   })
   @Transform(({ value }) => +value || DEFAULT_POST_COUNT_LIMIT)
   @IsNumber()
@@ -18,7 +19,7 @@ export class PostQuery {
 
   @ApiProperty({
     description: 'Type',
-    example: 'text'
+    example: 'text',
   })
   @IsIn(Object.values(PostType))
   @IsOptional()
@@ -26,14 +27,14 @@ export class PostQuery {
 
   @ApiProperty({
     description: 'User ID',
-    example: '1'
+    example: '1',
   })
   @IsOptional()
   public userId?: string;
 
   @ApiProperty({
     description: 'Sort by',
-    example: 'createdAt'
+    example: 'createdAt',
   })
   @IsIn(Object.values(SortBy))
   @IsOptional()
@@ -41,14 +42,14 @@ export class PostQuery {
 
   @ApiProperty({
     description: 'Tag',
-    example: 'tag'
+    example: 'tag',
   })
   @IsOptional()
   public tag?: string = '';
 
   @ApiProperty({
     description: 'Sort direction',
-    example: 'desc'
+    example: 'desc',
   })
   @IsIn(Object.values(SortDirection))
   @IsOptional()
@@ -56,9 +57,8 @@ export class PostQuery {
 
   @ApiProperty({
     description: 'Page',
-    example: 1
+    example: 1,
   })
-
   @Transform(({ value }) => +value || DEFAULT_PAGE_COUNT)
   @IsOptional()
   public page: number = DEFAULT_PAGE_COUNT;

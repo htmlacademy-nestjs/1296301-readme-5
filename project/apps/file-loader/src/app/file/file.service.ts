@@ -1,17 +1,19 @@
 import 'multer';
+import dayjs from 'dayjs';
+import { extension } from 'mime-types';
 import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+
+import { join } from 'node:path';
 import { ensureDir } from 'fs-extra';
 import { writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import dayjs from "dayjs";
 import { randomUUID } from 'node:crypto';
-import { extension } from 'mime-types';
 
+import { StoredFile } from '@project/shared/app/types';
 import { FileLoaderConfig } from '@project/shared/config/file-vault';
+
 import { FileRepository } from './file.repository';
 import { FileEntity } from './file.entity';
-import { StoredFile } from '@project/shared/app/types';
 
 @Injectable()
 export class FileService {

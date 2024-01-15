@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { AuthUser } from '@project/shared/app/types';
 
 @Schema({

@@ -1,11 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional } from "class-validator";
-import { UpdateBasePostDto } from "./update-base-post.dto";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional } from 'class-validator';
+
+import { UpdateBasePostDto } from './update-base-post.dto';
 
 export class UpdateTextPostDto extends UpdateBasePostDto {
   @ApiProperty({
     description: 'Title of post',
-    example: 'Title'
+    example: 'Title',
   })
   @IsNotEmpty()
   @IsOptional()
@@ -13,7 +14,7 @@ export class UpdateTextPostDto extends UpdateBasePostDto {
 
   @ApiProperty({
     description: 'Announcement of post',
-    example: 'Text'
+    example: 'Text',
   })
   @IsNotEmpty()
   @IsOptional()
@@ -21,7 +22,7 @@ export class UpdateTextPostDto extends UpdateBasePostDto {
 
   @ApiProperty({
     description: 'Text of post',
-    example: 'Text'
+    example: 'Text',
   })
   @IsNotEmpty()
   @IsOptional()

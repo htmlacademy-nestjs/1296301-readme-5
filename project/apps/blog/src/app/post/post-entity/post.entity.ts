@@ -1,8 +1,5 @@
-import { Post } from '@project/shared/app/types';
-import { Entity } from "@project/shared/app/types";
-import { Message } from '@project/shared/app/types';
-import { PostType } from '@project/shared/app/types';
-import { PublicationStatus } from '@project/shared/app/types';
+import { Post, PostType, Entity, Message, PublicationStatus } from '@project/shared/app/types';
+
 import { DEFAULT_AMOUNT, DEFAULT_STATUS } from '../constants/post.constant';
 
 export abstract class PostEntity implements Post, Entity<string, Post> {

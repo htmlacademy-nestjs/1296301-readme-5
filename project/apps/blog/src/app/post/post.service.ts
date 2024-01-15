@@ -1,14 +1,16 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+
+import { PostContentType, PaginationResult } from "@project/shared/app/types";
+
 import { PostRepository } from './post.repository';
 import { PostsError } from './constants/post.constant';
-import { CreatePostDto } from './dto/create-post/create-post.dto';
+
 import { PostTypeEntity } from './post-entity/post-type.entity';
-import { PostContentType } from "@project/shared/app/types";
-import { PostContentEntity } from "./post-entity/post-content-entity.type";
-import { PostQuery } from "./query/post.query";
-import { SearchQuery } from "./query/search.query";
-import { PaginationResult} from "@project/shared/app/types";
-import { UpdatePostDto } from "./dto/update-post/update-post.dto";
+import { PostContentEntity } from './post-entity/post-content-entity.type';
+import { PostQuery } from './query/post.query';
+import { SearchQuery } from './query/search.query';
+import { CreatePostDto } from './dto/create-post/create-post.dto';
+import { UpdatePostDto } from './dto/update-post/update-post.dto';
 
 @Injectable()
 export class PostService {

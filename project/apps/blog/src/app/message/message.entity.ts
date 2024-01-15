@@ -1,5 +1,4 @@
-import { Message } from "@project/shared/app/types";
-import { Entity } from "@project/shared/app/types";
+import { Message, Entity } from '@project/shared/app/types';
 
 export class MessageEntity implements Message, Entity<string, Message> {
   public id?: string;

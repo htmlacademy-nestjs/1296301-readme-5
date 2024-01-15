@@ -1,6 +1,6 @@
-import { PhotoPost } from "@project/shared/app/types";
+import { PhotoPost, Entity } from '@project/shared/app/types';
+
 import { PostEntity } from './post.entity';
-import { Entity } from "@project/shared/app/types";
 
 export class PhotoPostEntity extends PostEntity implements PhotoPost, Entity<string, PhotoPost> {
   public link: string;

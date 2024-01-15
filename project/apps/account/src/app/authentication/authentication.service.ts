@@ -4,14 +4,16 @@ import {
   Logger, HttpException, HttpStatus, } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Token, TokenPayload, User } from '@project/shared/app/types';
-import { BlogUserRepository } from '../blog-user/blog-user.repository';
+
 import { dbConfig } from '@project/shared/config/account';
+import { Token, TokenPayload, User } from '@project/shared/app/types';
+
+import { BlogUserRepository } from '../blog-user/blog-user.repository';
+import { AUTH_USER_EXISTS, AUTH_USER_WRONG, AUTH_USER_NOT_FOUND, AUTH_USER_NOT_CORRECT_PASSWORD } from './authentication.constants';
+import { BlogUserEntity } from '../blog-user/blog-user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ChangePasswordUserDto } from './dto/change-password-user.dto';
-import { AUTH_USER_EXISTS, AUTH_USER_WRONG, AUTH_USER_NOT_FOUND, AUTH_USER_NOT_CORRECT_PASSWORD } from './authentication.constant';
-import { BlogUserEntity } from '../blog-user/blog-user.entity';
 
 @Injectable()
 export class AuthenticationService {

@@ -1,4 +1,5 @@
 import { PostType } from '@project/shared/app/types';
+
 import { VideoPostEntity } from './video-post.entity';
 import { LinkPostEntity } from './link-post.entity';
 import { PhotoPostEntity } from './photo-post.entity';

@@ -1,5 +1,4 @@
-import { File } from '@project/shared/app/types';
-import { Entity } from "@project/shared/app/types";
+import { File, Entity } from '@project/shared/app/types';
 
 export class FileEntity implements File, Entity<string> {
   public id?: string;

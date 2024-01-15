@@ -1,7 +1,5 @@
-import { PrismaClientService } from "@project/shared/blog/models";
-
-import { DefaultPojoType, Entity, EntityIdType } from "@project/shared/app/types";
-import { Repository } from "@project/shared/app/types";
+import { PrismaClientService } from '@project/shared/blog/models';
+import { Repository, DefaultPojoType } from "@project/shared/app/types";
 
 export abstract class BasePostgresRepository<
   EntityType,

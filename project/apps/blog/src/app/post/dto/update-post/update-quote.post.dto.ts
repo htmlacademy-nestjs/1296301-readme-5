@@ -1,11 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional } from "class-validator";
-import { UpdateBasePostDto } from "./update-base-post.dto";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional } from 'class-validator';
+
+import { UpdateBasePostDto } from './update-base-post.dto';
 
 export class UpdateQuotePostDto extends UpdateBasePostDto {
   @ApiProperty({
     description: 'Quote author name',
-    example: 'Author'
+    example: 'Author',
   })
   @IsNotEmpty()
   @IsOptional()
@@ -13,7 +14,7 @@ export class UpdateQuotePostDto extends UpdateBasePostDto {
 
   @ApiProperty({
     description: 'Text of quote',
-    example: 'Quote text'
+    example: 'Quote text',
   })
   @IsNotEmpty()
   @IsOptional()

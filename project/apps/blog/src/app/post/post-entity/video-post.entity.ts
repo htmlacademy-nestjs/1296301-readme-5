@@ -1,6 +1,6 @@
-import { VideoPost } from "@project/shared/app/types";
+import { VideoPost, Entity } from '@project/shared/app/types';
+
 import { PostEntity } from './post.entity';
-import { Entity } from "@project/shared/app/types";
 
 export class VideoPostEntity extends PostEntity implements VideoPost, Entity<string, VideoPost> {
   public title: string;

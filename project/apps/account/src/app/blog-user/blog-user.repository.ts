@@ -3,9 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { BaseMongoRepository } from '@project/shared/core';
+import { EntityIdType } from '@project/shared/app/types';
+
 import { BlogUserEntity } from './blog-user.entity';
 import { BlogUserModel } from './blog-user.model';
-import { EntityIdType } from '@project/shared/app/types';
 
 @Injectable()
 export class BlogUserRepository extends BaseMongoRepository<BlogUserEntity, EntityIdType, BlogUserModel> {

@@ -1,6 +1,7 @@
 import { registerAs, ConfigType } from '@nestjs/config';
-import { AppConfiguration } from './app/app.env';
 import { plainToClass } from 'class-transformer';
+
+import { AppConfiguration } from './app/app.env';
 import { DEFAULT_PORT, Environment } from './app/app.const';
 
 async function getConfig(): Promise<AppConfiguration> {

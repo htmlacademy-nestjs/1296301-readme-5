@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
+import { ConfigAccountModule, getMongooseOptions } from '@project/shared/config/account';
+
 import { BlogUserModule } from './blog-user/blog-user.module';
 import { AuthenticationModule } from './authentication/authentication.module';
-import { ConfigAccountModule } from '@project/shared/config/account';
-import { MongooseModule } from '@nestjs/mongoose';
-import { getMongooseOptions } from '@project/shared/config/account';
 
 @Module({
   imports: [

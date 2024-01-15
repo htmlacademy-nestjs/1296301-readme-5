@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { Entity, EntityIdType } from '@project/shared/app/types';
-import { Repository } from '@project/shared/app/types';
+
+import { Repository, Entity, EntityIdType } from '@project/shared/app/types';
 
 export abstract class BaseMemoryRepository<T extends Entity<EntityIdType>> implements Repository<T> {
   protected entities: Map<T['id'], T> = new Map();

@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { FileService } from './file.service';
-import { FileController } from './file.controller';
-import { FileRepository } from "./file.repository";
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+
+import { FileService } from './file.service';
+import { FileController } from './file.controller';
+import { FileRepository } from './file.repository';
 import { FileModel, FileSchema } from './file.model';
 
 const SERVE_ROOT = '/static';

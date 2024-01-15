@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BasePostgresRepository } from '@project/shared/core';
-import { MessageEntity } from "./message.entity";
-import { Message } from "@project/shared/app/types";
-import { MessageQuery } from "./query/message.query";
 import { PrismaClientService } from '@project/shared/blog/models';
-import { EntityIdType } from "@project/shared/app/types";
+import { Message, EntityIdType } from '@project/shared/app/types';
+
+import { MessageEntity } from './message.entity';
+import { MessageQuery } from './query/message.query';
 
 @Injectable()
 export class MessageRepository extends BasePostgresRepository<MessageEntity, EntityIdType, Message> {

@@ -1,11 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsUrl } from "class-validator";
-import { UpdateBasePostDto } from "./update-base-post.dto";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
+
+import { UpdateBasePostDto } from './update-base-post.dto';
 
 export class UpdateLinkPostDto extends UpdateBasePostDto {
   @ApiProperty({
     description: 'Reference to some resource',
-    example: 'https://example.com'
+    example: 'https://example.com',
   })
   @IsUrl()
   @IsNotEmpty()
@@ -14,7 +15,7 @@ export class UpdateLinkPostDto extends UpdateBasePostDto {
 
   @ApiProperty({
     description: 'Post link description',
-    example: 'Description'
+    example: 'Description',
   })
   @IsNotEmpty()
   @IsOptional()
