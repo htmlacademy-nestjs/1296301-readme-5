@@ -1,17 +1,28 @@
-import { QuotePost } from '@project/shared/app/types';
+import { QuotePost, Entity } from '@project/shared/app/types';
 import { PostEntity } from './post.entity';
 
-export class QuotePostEntity extends PostEntity implements QuotePost {
+export class QuotePostEntity extends PostEntity implements QuotePost, Entity<string, QuotePost> {
   public description: string;
   public quoteAuthor: string;
 
-  constructor(postData: QuotePost) {
-    super(postData);
-    this.fillEntity(postData);
+  constructor(post: QuotePost) {
+    super(post);
+
+    this.populate(post);
   }
 
-  public fillEntity(postData: QuotePost) {
-    this.description = postData.description;
-    this.quoteAuthor = postData.quoteAuthor;
+  public populate(data: QuotePost): QuotePostEntity {
+    this.description = data.description;
+    this.quoteAuthor = data.quoteAuthor;
+
+    return this;
+  }
+
+  public toPOJO(): QuotePost {
+    return {
+      ...super.toPOJO(),
+      description: this.description,
+      quoteAuthor: this.quoteAuthor,
+    };
   }
 }

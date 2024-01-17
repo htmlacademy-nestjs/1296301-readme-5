@@ -1,8 +1,8 @@
-import { Entity, EntityIdType } from './entity.interface';
+import { Entity, EntityIdType, DefaultPojoType } from './entity.interface';
 
-export interface Repository<T extends Entity<EntityIdType>> {
-  findById(id: T['id']): Promise<T | null>;
-  save(entity: T): Promise<T>;
-  update(id: T['id'], entity: T): Promise<T>;
-  delete(id: T['id']): Promise<void>;
+export interface Repository<EntityType extends Entity<EntityIdType, PojoType>, IDType, PojoType = DefaultPojoType> {
+  findById(id: IDType): Promise<PojoType | null>;
+  save(entity: EntityType): Promise<PojoType>;
+  update(id: IDType, entity: EntityType): Promise<PojoType>;
+  delete(id: IDType): Promise<void>;
 }

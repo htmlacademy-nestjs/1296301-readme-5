@@ -1,15 +1,15 @@
 import { Document, Model } from 'mongoose';
 import { NotFoundException } from '@nestjs/common';
 
-import { Entity, EntityIdType } from '@project/shared/app/types';
-import { Repository } from '@project/shared/app/types';
+import { Repository, Entity, EntityIdType } from '@project/shared/app/types';
 
 export abstract class BaseMongoRepository<
   EntityType extends Entity<EntityIdType>,
+  IdType,
   DocumentType extends Document
-  > implements Repository<EntityType> {
+  > implements Repository<EntityType, IdType> {
 
-  constructor(
+  protected constructor(
     protected readonly model: Model<DocumentType>,
     private readonly createEntity: (document: DocumentType) => EntityType,
   ) {}
@@ -22,7 +22,7 @@ export abstract class BaseMongoRepository<
     return this.createEntity(document.toObject({ versionKey: false }));
   }
 
-  public async findById(id: EntityType['id']): Promise<EntityType | null> {
+  public async findById(id: IdType): Promise<EntityType | null> {
     const document = await this.model.findById(id).exec();
     return this.createEntityFromDocument(document);
   }
@@ -35,7 +35,7 @@ export abstract class BaseMongoRepository<
     return entity;
   }
 
-  public async update(id: EntityType['id'], entity: EntityType): Promise<EntityType> {
+  public async update(id: IdType, entity: EntityType): Promise<EntityType> {
     const updatedDocument = await this.model.findByIdAndUpdate(
       id,
       entity.toPOJO(),
@@ -50,7 +50,7 @@ export abstract class BaseMongoRepository<
     return entity;
   }
 
-  public async delete(id: EntityType['id']): Promise<void> {
+  public async delete(id: IdType): Promise<void> {
     const deletedDocument = await this.model.findByIdAndDelete(id).exec();
     if (! deletedDocument) {
       throw new NotFoundException(`Entity with id ${id} not found.`);

@@ -1,8 +1,9 @@
 import { compare, genSalt, hash } from 'bcrypt';
-import { AuthUser } from '@project/shared/app/types';
+
+import { AuthUser, Entity } from '@project/shared/app/types';
 import { getDate } from '@project/shared/helpers';
+
 import { SALT_ROUNDS } from './blog-user.constant';
-import { Entity } from '@project/shared/app/types';
 
 export class BlogUserEntity implements AuthUser, Entity<string> {
   public id?: string;

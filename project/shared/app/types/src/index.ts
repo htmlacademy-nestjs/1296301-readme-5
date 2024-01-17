@@ -1,8 +1,8 @@
 export * from './lib/user/user.interface';
 export * from './lib/user/auth-user.interface';
 
-export * from './lib/post/enum/post-type-enum';
-export * from './lib/post/enum/publication-status-enum';
+export * from './lib/post/enum/post-type.enum';
+export * from './lib/post/enum/publication-status.enum';
 
 export * from './lib/post/post.interface';
 export * from './lib/post/video-post.interface';
@@ -16,9 +16,15 @@ export * from './lib/message/message.interface';
 
 export * from './lib/like/like.interface';
 
-export * from './lib/tag/tag.interface';
-
 export * from './lib/repository/repository.interface';
 export * from './lib/repository/entity.interface';
 
 export * from './lib/file/file.interface';
+export * from './lib/file/stored-file.interface';
+
+export * from './lib/pagination/pagination.interface';
+export * from './lib/pagination/sort-direction.interface';
+export * from './lib/pagination/sort-by.enum';
+
+export * from './lib/auth/token-payload.interface';
+export * from './lib/auth/token.interface';

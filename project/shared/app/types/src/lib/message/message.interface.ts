@@ -3,6 +3,6 @@ export interface Message {
   postId?: string;
   userId: string;
   message: string;
-  createdAt: Date;
-  updateAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

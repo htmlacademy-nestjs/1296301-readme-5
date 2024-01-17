@@ -1,8 +1,9 @@
-import { PostRdo } from './post.rdo';
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class LinkPostRdo extends PostRdo {
+import { BasePostRdo } from './base-post.rdo';
+
+export class LinkPostRdo extends BasePostRdo {
   @ApiProperty({
     description: 'Link text',
     example: 'https://example.com',
@@ -12,7 +13,7 @@ export class LinkPostRdo extends PostRdo {
 
   @ApiProperty({
     description: 'Description of post link',
-    example: 'Description'
+    example: 'Description',
   })
   @Expose()
   public description: string;

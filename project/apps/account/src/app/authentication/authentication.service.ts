@@ -1,20 +1,30 @@
-import { Injectable, Inject, ConflictException, UnauthorizedException, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable, Inject, ConflictException,
+  UnauthorizedException, NotFoundException, BadRequestException,
+  Logger, HttpException, HttpStatus, } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { BlogUserRepository } from '../blog-user/blog-user.repository';
+import { JwtService } from '@nestjs/jwt';
+
 import { dbConfig } from '@project/shared/config/account';
+import { Token, TokenPayload, User } from '@project/shared/app/types';
+
+import { BlogUserRepository } from '../blog-user/blog-user.repository';
+import { AUTH_USER_EXISTS, AUTH_USER_WRONG, AUTH_USER_NOT_FOUND, AUTH_USER_NOT_CORRECT_PASSWORD } from './authentication.constants';
+import { BlogUserEntity } from '../blog-user/blog-user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ChangePasswordUserDto } from './dto/change-password-user.dto';
-import { AUTH_USER_EXISTS, AUTH_USER_WRONG, AUTH_USER_NOT_FOUND, AUTH_USER_NOT_CORRECT_PASSWORD } from './authentication.constant';
-import { BlogUserEntity } from '../blog-user/blog-user.entity';
 
 @Injectable()
 export class AuthenticationService {
+  private readonly logger = new Logger(AuthenticationService.name);
+
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
 
     @Inject(dbConfig.KEY)
     private readonly dataBaseConfig: ConfigType<typeof dbConfig>,
+    private readonly jwtService: JwtService,
   ) {}
 
   public async register(dto: CreateUserDto) {
@@ -71,5 +81,23 @@ export class AuthenticationService {
     const userEntity = await existUser.setPassword(newPassword);
 
     return await this.blogUserRepository.update(id, userEntity);
+  }
+
+  public async createUserToken(user: User): Promise<Token> {
+    const payload: TokenPayload = {
+      sub: user.id,
+      email: user.email,
+      userName: user.userName,
+      avatar: user.avatar,
+    };
+
+    try {
+      const accessToken = await this.jwtService.signAsync(payload);
+
+      return { accessToken };
+    } catch (error) {
+      this.logger.error('[Token generation error]: ' + error.message);
+      throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

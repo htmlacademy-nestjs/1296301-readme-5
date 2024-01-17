@@ -1,15 +1,43 @@
-import { Controller, Get, Param, Post, UploadedFile } from '@nestjs/common';
-import { FileService } from './file.service';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Get, HttpStatus, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 
+import { fillDto } from '@project/shared/helpers';
+import { MongoIdValidationPipe } from '@project/shared/core';
+
+import { FileLoaderMessages } from './file.constants';
+import { FileService } from './file.service';
+import { UploadedFileRdo } from './rdo/uploaded-file.rdo';
+
+@ApiTags('files')
 @Controller('files')
 export class FileController {
   constructor(
     private readonly fileService: FileService,
   ) {}
 
-  @Post('/upload')
-  public async uploadFile(@UploadedFile() file) {}
+  @ApiResponse({
+    type: UploadedFileRdo,
+    status: HttpStatus.OK,
+    description: FileLoaderMessages.Uploaded,
+  })
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('upload')
+  public async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    const fileEntity = await this.fileService.saveFile(file);
 
+    return fillDto(UploadedFileRdo, fileEntity.toPOJO());
+  }
+
+  @ApiResponse({
+    type: UploadedFileRdo,
+    status: HttpStatus.OK,
+    description: FileLoaderMessages.Show,
+  })
   @Get(':fileId')
-  public async show(@Param('fileId') fileId: string) {}
+  public async show(@Param('fileId', MongoIdValidationPipe) fileId: string) {
+    const existFile = await this.fileService.getFile(fileId);
+
+    return fillDto(UploadedFileRdo, existFile);
+  }
 }

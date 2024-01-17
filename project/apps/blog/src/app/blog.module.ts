@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
+
 import { PostModule } from './post/post.module';
+import { LikeModule } from './like/like.module';
+import { MessageModule } from './message/message.module';
 import { PublicationModule } from './publication/publication.module';
-import { PostRepositoryModule } from './post-repository/post-repository.module';
 
 @Module({
-  imports: [PostModule, PostRepositoryModule, PublicationModule],
+  imports: [PostModule, PublicationModule, MessageModule, LikeModule],
   controllers: [],
   providers: [],
-  exports: [PostRepositoryModule]
+  exports: []
 })
 export class BlogModule {}

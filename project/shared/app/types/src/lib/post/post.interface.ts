@@ -1,8 +1,6 @@
-import { PostType } from './enum/post-type-enum';
-import { PublicationStatus } from './enum/publication-status-enum';
-import { Tag } from '../tag/tag.interface';
+import { PostType } from './enum/post-type.enum';
+import { PublicationStatus } from './enum/publication-status.enum';
 import { Message } from '../message/message.interface';
-import { Like } from '../like/like.interface';
 
 export interface Post {
   id?: string;
@@ -10,13 +8,12 @@ export interface Post {
   userId?: string;
   originalUserId?: string;
   type: PostType;
-  createdAt: Date;
-  publicatedAt: Date;
+  createdAt?: Date;
+  publicatedAt?: Date;
   status: PublicationStatus;
   isRepost: boolean;
-  tags: Tag[];
+  tags?: string[];
   likesCount: number;
   messagesCount: number;
-  likes: Like[];
   messages: Message[];
 }
