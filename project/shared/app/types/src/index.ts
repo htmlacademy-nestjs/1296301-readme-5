@@ -28,3 +28,6 @@ export * from './lib/pagination/sort-by.enum';
 
 export * from './lib/auth/token-payload.interface';
 export * from './lib/auth/token.interface';
+
+export * from './lib/notifications/subscriber.interface';
+export * from './lib/notifications/rabbit-routing.enum';
