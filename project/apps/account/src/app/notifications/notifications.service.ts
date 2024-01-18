@@ -10,6 +10,7 @@ import { rabbitConfig } from '@project/shared/config/account';
 export class NotificationsService {
   constructor(
     private readonly rabbitClient: AmqpConnection,
+
     @Inject(rabbitConfig.KEY)
     private readonly rabbiOptions: ConfigType<typeof rabbitConfig>,
   ) {}
