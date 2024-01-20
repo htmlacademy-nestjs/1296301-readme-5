@@ -13,11 +13,14 @@ import { LoggedUserRdo } from './rdo/logged-user.rdo';
 
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
+import { NotificationsService } from '../notifications/notifications.service';
+
 @ApiTags('authentication')
 @Controller('auth')
 export class AuthenticationController {
   constructor(
-    private readonly authService: AuthenticationService
+    private readonly authService: AuthenticationService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   @ApiResponse({
@@ -27,6 +30,8 @@ export class AuthenticationController {
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(dto);
+    const { email, userName } = newUser;
+    await this.notificationsService.registerSubscriber({ email, userName });
 
     return fillDto(UserRdo, newUser.toPOJO());
   }

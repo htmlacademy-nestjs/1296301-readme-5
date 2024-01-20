@@ -5,12 +5,14 @@ import { ConfigAccountModule, getMongooseOptions } from '@project/shared/config/
 
 import { BlogUserModule } from './blog-user/blog-user.module';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
     BlogUserModule,
     AuthenticationModule,
     ConfigAccountModule,
+    NotificationsModule,
     MongooseModule.forRootAsync(getMongooseOptions()),
   ],
   controllers: [],
