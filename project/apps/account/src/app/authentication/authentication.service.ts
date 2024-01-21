@@ -5,7 +5,7 @@ import {
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { dbConfig } from '@project/shared/config/account';
+import { dbConfig, jwtConfig } from '@project/shared/config/account';
 import { Token, TokenPayload, User } from '@project/shared/app/types';
 
 import { BlogUserRepository } from '../blog-user/blog-user.repository';
@@ -25,6 +25,9 @@ export class AuthenticationService {
     @Inject(dbConfig.KEY)
     private readonly dataBaseConfig: ConfigType<typeof dbConfig>,
     private readonly jwtService: JwtService,
+
+    @Inject(jwtConfig.KEY)
+    private readonly jwtOptions: ConfigType<typeof jwtConfig>,
   ) {}
 
   public async register(dto: CreateUserDto) {
@@ -70,6 +73,16 @@ export class AuthenticationService {
     return existUser;
   }
 
+  public async getUserByEmail(email: string) {
+    const existUser = await this.blogUserRepository.findByEmail(email);
+
+    if (!existUser) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return existUser;
+  }
+
   public async changePassword(dto: ChangePasswordUserDto) {
     const { id, password, newPassword } = dto;
     const existUser = await this.blogUserRepository.findById(id);
@@ -93,11 +106,15 @@ export class AuthenticationService {
 
     try {
       const accessToken = await this.jwtService.signAsync(payload);
+      const refreshToken = await this.jwtService.signAsync(payload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.refreshTokenExpiresIn
+      });
 
-      return { accessToken };
+      return { accessToken, refreshToken };
     } catch (error) {
       this.logger.error('[Token generation error]: ' + error.message);
-      throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Error creating token.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

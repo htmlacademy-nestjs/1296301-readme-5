@@ -5,6 +5,8 @@ import { ConfigService } from '@nestjs/config';
 import { getJwtOptions } from '@project/shared/config/account';
 
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { BlogUserModule } from '../blog-user/blog-user.module';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
@@ -24,6 +26,8 @@ import { NotificationsModule } from '../notifications/notifications.module';
   providers: [
     AuthenticationService,
     JwtAccessStrategy,
+    LocalStrategy,
+    JwtRefreshStrategy,
   ],
 })
 export class AuthenticationModule {}
