@@ -1,3 +1,4 @@
+import * as crypto from 'node:crypto';
 import {
   Injectable, Inject, ConflictException,
   UnauthorizedException, NotFoundException, BadRequestException,
@@ -5,6 +6,7 @@ import {
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
+import { createJWTPayload } from '@project/shared/helpers';
 import { dbConfig, jwtConfig } from '@project/shared/config/account';
 import { Token, TokenPayload, User } from '@project/shared/app/types';
 
@@ -14,6 +16,8 @@ import { BlogUserEntity } from '../blog-user/blog-user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { ChangePasswordUserDto } from './dto/change-password-user.dto';
+
+import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -28,6 +32,7 @@ export class AuthenticationService {
 
     @Inject(jwtConfig.KEY)
     private readonly jwtOptions: ConfigType<typeof jwtConfig>,
+    private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
   public async register(dto: CreateUserDto) {
@@ -96,25 +101,18 @@ export class AuthenticationService {
     return await this.blogUserRepository.update(id, userEntity);
   }
 
-  public async createUserToken(user: User): Promise<Token> {
-    const payload: TokenPayload = {
-      sub: user.id,
-      email: user.email,
-      userName: user.userName,
-      avatar: user.avatar,
-    };
+  public async createUserToken(user: User) {
+    const accessTokenPayload = createJWTPayload(user);
+    const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
 
-    try {
-      const accessToken = await this.jwtService.signAsync(payload);
-      const refreshToken = await this.jwtService.signAsync(payload, {
+    await this.refreshTokenService.createRefreshSession(refreshTokenPayload)
+
+    return {
+      accessToken: await this.jwtService.signAsync(accessTokenPayload),
+      refreshToken: await this.jwtService.signAsync(refreshTokenPayload, {
         secret: this.jwtOptions.refreshTokenSecret,
         expiresIn: this.jwtOptions.refreshTokenExpiresIn
-      });
-
-      return { accessToken, refreshToken };
-    } catch (error) {
-      this.logger.error('[Token generation error]: ' + error.message);
-      throw new HttpException('Error creating token.', HttpStatus.INTERNAL_SERVER_ERROR);
+      })
     }
   }
 }

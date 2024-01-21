@@ -5,12 +5,12 @@ export class EmailSubscriberEntity implements Subscriber, Entity<string, Subscri
   public email: string;
   public userName: string;
 
-  public toPOJO() {
+  public toPOJO(): Subscriber {
     return {
       id: this.id,
       email: this.email,
       userName: this.userName,
-    }
+    };
   }
 
   public populate(data: Subscriber): EmailSubscriberEntity {
@@ -25,5 +25,4 @@ export class EmailSubscriberEntity implements Subscriber, Entity<string, Subscri
     return new EmailSubscriberEntity()
       .populate(data);
   }
-
 }

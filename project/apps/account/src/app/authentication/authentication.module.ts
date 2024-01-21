@@ -11,6 +11,7 @@ import { BlogUserModule } from '../blog-user/blog-user.module';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { RefreshTokenModule } from '../refresh-token/refresh-token.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
       inject: [ConfigService],
     }),
     NotificationsModule,
+    RefreshTokenModule,
   ],
   controllers: [AuthenticationController],
   providers: [
