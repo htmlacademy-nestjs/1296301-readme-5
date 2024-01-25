@@ -32,6 +32,7 @@ export class BlogUserEntity implements AuthUser, Entity<string> {
   }
 
   public populate(data: AuthUser): void {
+    this.id = data.id;
     this.email = data.email;
     this.userName = data.userName;
     this.avatar = data.avatar || '';

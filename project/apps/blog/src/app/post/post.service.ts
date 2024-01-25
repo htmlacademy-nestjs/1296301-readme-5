@@ -1,16 +1,14 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { PostContentType, PaginationResult } from "@project/shared/app/types";
+import { PostContentType, PaginationResult } from '@project/shared/app/types';
+import { CreatePostDto, UpdatePostDto, PostQuery, SearchQuery } from '@project/shared/blog/dto';
 
 import { PostRepository } from './post.repository';
 import { PostsError } from './constants/post.constant';
 
 import { PostTypeEntity } from './post-entity/post-type.entity';
 import { PostContentEntity } from './post-entity/post-content-entity.type';
-import { PostQuery } from './query/post.query';
-import { SearchQuery } from './query/search.query';
-import { CreatePostDto } from './dto/create-post/create-post.dto';
-import { UpdatePostDto } from './dto/update-post/update-post.dto';
+
 
 @Injectable()
 export class PostService {
@@ -27,10 +25,12 @@ export class PostService {
     return newPost;
   }
 
-  public async deletePost(id: string): Promise<void> {
-    try {
+  public async deletePost(id: string, userId: string): Promise<void> {
+    const deletingPost = await this.getPost(id);
+
+    if (deletingPost?.userId === userId) {
       await this.postRepository.deleteById(id);
-    } catch {
+    } else {
       throw new NotFoundException(`Post with ID ${id} not found`);
     }
   }
@@ -41,7 +41,11 @@ export class PostService {
     return new PostTypeEntity[record.type];
   }
 
-  public async getAllPosts(query?: PostQuery): Promise<PaginationResult<PostContentEntity>> {
+  public async getUserPostsCount(id: string): Promise<number> {
+    return await this.postRepository.getPostCount({ userId: id });
+  }
+
+  public async getAllPostsByQuery(query?: PostQuery): Promise<PaginationResult<PostContentEntity>> {
     const { entities, ...params } = await this.postRepository.find(query);
 
     return {
@@ -52,8 +56,13 @@ export class PostService {
     };
   }
 
-  public async updatePost(id: string, dto: UpdatePostDto): Promise<PostContentEntity> {
+  public async updatePost(id: string, dto: UpdatePostDto, userId: string): Promise<PostContentEntity> {
     const existsPost = await this.postRepository.findById(id);
+
+    if (existsPost?.userId !== userId) {
+      throw new NotFoundException(`You can't update post with ID ${id}`);
+    }
+
     const existsPostEntity = new PostTypeEntity[existsPost.type](existsPost);
     let hasChanges = false;
 

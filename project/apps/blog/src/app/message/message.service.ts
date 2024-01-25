@@ -1,10 +1,9 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 
-import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateMessageDto } from './dto/update-message.dto';
+import { CreateMessageDto, UpdateMessageDto, MessageQuery } from '@project/shared/blog/dto';
+
 import { MessageEntity } from './message.entity';
 import { MessageRepository } from './message.repository';
-import { MessageQuery } from './query/message.query';
 
 @Injectable()
 export class MessageService {
@@ -25,7 +24,7 @@ export class MessageService {
   }
 
   public async getMessages(query: MessageQuery): Promise<MessageEntity[]> {
-    const records = await this.messageRepository.findByPostId(query);
+    const records = await this.messageRepository.findByPost(query);
 
     return records.map((message) => new MessageEntity(message));
   }

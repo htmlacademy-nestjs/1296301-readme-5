@@ -2,20 +2,18 @@ import * as crypto from 'node:crypto';
 import {
   Injectable, Inject, ConflictException,
   UnauthorizedException, NotFoundException, BadRequestException,
-  Logger, HttpException, HttpStatus, } from '@nestjs/common';
+  Logger } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
 import { createJWTPayload } from '@project/shared/helpers';
 import { dbConfig, jwtConfig } from '@project/shared/config/account';
-import { Token, TokenPayload, User } from '@project/shared/app/types';
+import { User } from '@project/shared/app/types';
+import { CreateUserDto, LoginUserDto, ChangePasswordUserDto } from '@project/shared/blog/dto';
 
 import { BlogUserRepository } from '../blog-user/blog-user.repository';
 import { AUTH_USER_EXISTS, AUTH_USER_WRONG, AUTH_USER_NOT_FOUND, AUTH_USER_NOT_CORRECT_PASSWORD } from './authentication.constants';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { ChangePasswordUserDto } from './dto/change-password-user.dto';
 
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 
@@ -89,8 +87,8 @@ export class AuthenticationService {
   }
 
   public async changePassword(dto: ChangePasswordUserDto) {
-    const { id, password, newPassword } = dto;
-    const existUser = await this.blogUserRepository.findById(id);
+    const { password, newPassword, userId } = dto;
+    const existUser = await this.blogUserRepository.findById(userId);
 
     if (!await existUser.comparePassword(password)) {
       throw new BadRequestException(AUTH_USER_NOT_CORRECT_PASSWORD);
@@ -98,21 +96,21 @@ export class AuthenticationService {
 
     const userEntity = await existUser.setPassword(newPassword);
 
-    return await this.blogUserRepository.update(id, userEntity);
+    return await this.blogUserRepository.update(userId, userEntity);
   }
 
   public async createUserToken(user: User) {
     const accessTokenPayload = createJWTPayload(user);
     const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
 
-    await this.refreshTokenService.createRefreshSession(refreshTokenPayload)
+    await this.refreshTokenService.createRefreshSession(refreshTokenPayload);
 
     return {
       accessToken: await this.jwtService.signAsync(accessTokenPayload),
       refreshToken: await this.jwtService.signAsync(refreshTokenPayload, {
         secret: this.jwtOptions.refreshTokenSecret,
         expiresIn: this.jwtOptions.refreshTokenExpiresIn
-      })
-    }
+      }),
+    };
   }
 }

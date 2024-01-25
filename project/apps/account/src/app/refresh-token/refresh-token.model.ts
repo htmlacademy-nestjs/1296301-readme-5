@@ -7,7 +7,7 @@ import { Token } from '@project/shared/app/types';
   collection: 'refresh-sessions',
   timestamps: true,
   toJSON: { virtuals: true },
-  toObject: { virtuals: true },
+  toObject: { virtuals: true }
 })
 export class RefreshTokenModel extends Document implements Token {
   @Prop({ required: true })
@@ -22,7 +22,7 @@ export class RefreshTokenModel extends Document implements Token {
   @Prop()
   public createdAt: Date;
 
-  public id?: string;
+  public _id?: string;
 }
 
 export const RefreshTokenSchema = SchemaFactory.createForClass(RefreshTokenModel);

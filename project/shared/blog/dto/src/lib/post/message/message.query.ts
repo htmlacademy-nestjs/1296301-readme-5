@@ -4,7 +4,7 @@ import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { SortDirection } from '@project/shared/app/types';
 
-import { MAX_MESSAGES_COUNT, DEFAULT_SORT_DIRECTION } from '../constants/message.constants';
+import { MAX_MESSAGES_COUNT, DEFAULT_SORT_DIRECTION } from './message.constants';
 
 export class MessageQuery {
   @ApiProperty({

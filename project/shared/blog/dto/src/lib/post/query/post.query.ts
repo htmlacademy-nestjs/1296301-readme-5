@@ -4,8 +4,7 @@ import { IsIn, IsNumber, IsOptional } from 'class-validator';
 
 import { PostType, SortBy, SortDirection } from '@project/shared/app/types';
 
-import { DEFAULT_PAGE_COUNT, DEFAULT_POST_COUNT_LIMIT, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_BY } from '../constants/post.constant';
-
+import { DEFAULT_PAGE_COUNT, DEFAULT_POST_COUNT_LIMIT, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_BY } from './post.constant';
 
 export class PostQuery {
   @ApiProperty({

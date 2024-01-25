@@ -3,7 +3,7 @@ import { Entity, Token } from '@project/shared/app/types';
 export class RefreshTokenEntity implements Entity<RefreshTokenEntity>, Token {
   public createdAt: Date;
   public expiresIn: Date;
-  public id: string;
+  public id?: string;
   public tokenId: string;
   public userId: string;
   [key: string]: unknown;

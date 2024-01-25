@@ -19,7 +19,6 @@ export class EmailSubscriberService {
     }
 
     return this.emailSubscriberRepository
-      .save(new EmailSubscriberEntity().populate(subscriber))
-
+      .save(new EmailSubscriberEntity().populate(subscriber));
   }
 }

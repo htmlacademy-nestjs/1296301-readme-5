@@ -3,9 +3,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BasePostgresRepository } from '@project/shared/core';
 import { PrismaClientService } from '@project/shared/blog/models';
 import { Message, EntityIdType } from '@project/shared/app/types';
+import { MessageQuery } from '@project/shared/blog/dto';
 
 import { MessageEntity } from './message.entity';
-import { MessageQuery } from './query/message.query';
 
 @Injectable()
 export class MessageRepository extends BasePostgresRepository<MessageEntity, EntityIdType, Message> {
@@ -42,7 +42,7 @@ export class MessageRepository extends BasePostgresRepository<MessageEntity, Ent
     return record;
   }
 
-  public async findByPostId({ limit, postId, sortDirection, page }: MessageQuery): Promise<Message[]> {
+  public async findByPost({ limit, postId, sortDirection, page }: MessageQuery): Promise<Message[]> {
     const records = await this.client.message.findMany({
       where: {
         postId,

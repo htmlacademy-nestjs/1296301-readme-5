@@ -1,15 +1,18 @@
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Controller, Get, Param, Post, Delete, Patch, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Param, Post, Delete, Patch, Query, Body, Req, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 
 import { fillDto } from '@project/shared/helpers';
+import { RequestWithTokenPayload } from '@project/shared/app/types';
+import { CreateMessageDto, UpdateMessageDto, MessageQuery } from '@project/shared/blog/dto';
 
 import { MessageInfo } from './constants/message.constants';
 import { MessageService } from './message.service';
-import { MessageQuery } from './query/message.query';
 
-import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateMessageDto } from './dto/update-message.dto';
+import { CreateMessageValidationPipe } from './pipes/create-message-validation.pipe';
+import { UpdateMessageValidationPipe } from './pipes/update-message-validation.pipe';
+
 import { MessageRdo } from './rdo/message.rdo';
+import { CheckAuthGuard } from '../guards/check-auth.guard';
 
 @ApiTags('messages')
 @Controller('messages')
@@ -47,9 +50,10 @@ export class MessageController {
     status: HttpStatus.CREATED,
     description: MessageInfo.Add,
   })
+  @UseGuards(CheckAuthGuard)
   @Post('/')
-  async create(dto: CreateMessageDto) {
-    const newComment = await this.messageService.createMessage(dto, 'userId');
+  async create(@Req() { user }: RequestWithTokenPayload, @Body(CreateMessageValidationPipe) dto: CreateMessageDto) {
+    const newComment = await this.messageService.createMessage(dto, user.sub);
 
     return fillDto(MessageRdo, newComment.toPOJO());
   }
@@ -59,9 +63,10 @@ export class MessageController {
     description: MessageInfo.Remove,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(CheckAuthGuard)
   @Delete(':id')
-  async destroy(@Param('id') id: string) {
-    await this.messageService.deleteMessage(id, 'userId');
+  async destroy(@Req() { user }: RequestWithTokenPayload, @Param('id') id: string) {
+    await this.messageService.deleteMessage(id, user.sub);
   }
 
   @ApiResponse({
@@ -69,9 +74,10 @@ export class MessageController {
     status: HttpStatus.OK,
     description: MessageInfo.Update,
   })
+  @UseGuards(CheckAuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, dto: UpdateMessageDto) {
-    const updatedComment = await this.messageService.updateMessage(id, dto, 'userId');
+  async update(@Req() { user }: RequestWithTokenPayload, @Param('id') id: string, @Body(UpdateMessageValidationPipe) dto: UpdateMessageDto) {
+    const updatedComment = await this.messageService.updateMessage(id, dto, user.sub);
 
     return fillDto(MessageRdo, updatedComment.toPOJO());
   }

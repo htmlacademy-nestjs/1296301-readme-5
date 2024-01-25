@@ -8,10 +8,10 @@ import { UpdateVideoPostDto } from './update-video-post.dto';
 
 export type UpdatePostDto = UpdateLinkPostDto | UpdatePhotoPostDto | UpdateQuotePostDto | UpdateTextPostDto | UpdateVideoPostDto;
 
-export const CreateTypePostRdo = {
+export const UpdateTypePostDdo = {
   [PostType.Video]: UpdateVideoPostDto,
   [PostType.Text]: UpdateTextPostDto,
   [PostType.Link]: UpdateLinkPostDto,
   [PostType.Photo]: UpdatePhotoPostDto,
   [PostType.Quote]: UpdateQuotePostDto
-}
+};

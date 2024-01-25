@@ -4,10 +4,9 @@ import { PrismaClient } from '../../../../../node_modules/.prisma/client';
 
 import { BasePostgresRepository } from '@project/shared/core';
 import { PrismaClientService } from '@project/shared/blog/models';
+import { PostQuery, SearchQuery } from '@project/shared/blog/dto';
 import { PublicationStatus, PaginationResult, PostContentType, SortBy, EntityIdType } from '@project/shared/app/types';
 
-import { PostQuery } from './query/post.query';
-import { SearchQuery } from './query/search.query';
 import { PostContentEntity } from './post-entity/post-content-entity.type';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
     super(client);
   }
 
-  private async getPostCount(where: PrismaClient.PostWhereInput): Promise<number> {
+  public async getPostCount(where: PrismaClient.PostWhereInput): Promise<number> {
     return this.client.post.count({ where });
   }
 
@@ -169,16 +168,21 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       : { [query.sortBy]: query.sortDirection };
 
     const where: PrismaClient.PostWhereInput = {
-      userId: query.userId,
-      type: query.type,
       status: PublicationStatus.Published,
-      tags: { has: query.tag }
     };
+
+    if (query?.type) {
+      where.type = query.type;
+    }
 
     if (query?.tag) {
       where.tags = {
         has: query.tag,
       }
+    }
+
+    if (query?.userId) {
+      where.userId = query.userId;
     }
 
     const [records, postCount] = await Promise.all([

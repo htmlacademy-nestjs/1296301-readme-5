@@ -4,7 +4,7 @@ import { Transform } from 'class-transformer';
 
 import { SortDirection } from '@project/shared/app/types';
 
-import { DEFAULT_POST_SEARCH_COUNT_LIMIT, DEFAULT_SORT_DIRECTION } from '../constants/post.constant';
+import { DEFAULT_POST_SEARCH_COUNT_LIMIT, DEFAULT_SORT_DIRECTION } from './post.constant';
 
 export class SearchQuery {
   @ApiProperty({

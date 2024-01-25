@@ -2,12 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ChangePasswordUserDto {
   @ApiProperty({
-    description: 'The uniq user ID',
-    example: '13'
-  })
-  public id: string;
-
-  @ApiProperty({
     description: 'User current password',
     example: '123456'
   })
@@ -18,4 +12,10 @@ export class ChangePasswordUserDto {
     example: '654321'
   })
   public newPassword: string;
+
+  @ApiProperty({
+    description: 'User id',
+    example: '123'
+  })
+  public userId: string;
 }
