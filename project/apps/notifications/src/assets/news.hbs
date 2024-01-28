@@ -1,0 +1,31 @@
+<h1>Подборка новых публикаций</h1>
+
+<ul>
+  {{#each posts}}
+  <li>
+    <p>Тип публикации: {{type}}</p>
+    <p>Автор публикации: {{userId}}</p>
+    <p>Дата публикации: {{createdAt}}</p>
+
+    {{#if title}}
+      <p>Название: {{title}}</p>
+    {{/if}}
+
+    {{#if description}}
+      <p>Описание: {{description}}</p>
+    {{/if}}
+
+    {{#if announcement}}
+      <p>Анонс публикации: {{announcement}}</p>
+    {{/if}}
+
+    {{#if link}}
+      <p>Ссылка: {{link}}</p>
+    {{/if}}
+
+    {{#if quoteAuthor}}
+      <p>Автор цитаты: {{quoteAuthor}}</p>
+    {{/if}}
+
+  {{/each}}
+</ul>

@@ -10,7 +10,7 @@ import { AppModule } from './app/app.module';
 import { RequestIdInterceptor } from './app/interseptors/request-id.interceptor';
 
 async function bootstrap() {
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 4000;
   const globalPrefix = 'api';
   const app = await NestFactory.create(AppModule);
 

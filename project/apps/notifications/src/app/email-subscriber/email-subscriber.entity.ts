@@ -4,12 +4,14 @@ export class EmailSubscriberEntity implements Subscriber, Entity<string, Subscri
   public id?: string;
   public email: string;
   public userName: string;
+  public dateNotify: string;
 
   public toPOJO(): Subscriber {
     return {
       id: this.id,
       email: this.email,
       userName: this.userName,
+      dateNotify: this.dateNotify,
     };
   }
 
@@ -17,6 +19,7 @@ export class EmailSubscriberEntity implements Subscriber, Entity<string, Subscri
     this.id = data.id ?? undefined;
     this.email = data.email;
     this.userName = data.userName;
+    this.dateNotify = data.dateNotify;
 
     return this;
   }

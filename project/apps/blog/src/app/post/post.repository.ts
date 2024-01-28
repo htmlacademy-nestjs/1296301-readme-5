@@ -217,4 +217,16 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       totalItems: postCount,
     }
   }
+
+  public async getFullList(): Promise<PostContentType[]> {
+    return await this.client.post.findMany({
+      where: {
+        status: PublicationStatus.Published,
+      },
+      include: {
+        messages: true,
+        likes: true,
+      },
+    });
+  }
 }

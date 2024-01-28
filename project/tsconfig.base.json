@@ -19,6 +19,7 @@
       "@project/shared/blog/dto": ["shared/blog/dto/src/index.ts"],
       "@project/shared/blog/models": ["shared/blog/models/src/index.ts"],
       "@project/shared/config/account": ["shared/config/account/src/index.ts"],
+      "@project/shared/config/blog": ["shared/config/blog/src/index.ts"],
       "@project/shared/config/file-vault": [
         "shared/config/file-vault/src/index.ts"
       ],

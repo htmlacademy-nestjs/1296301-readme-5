@@ -109,4 +109,10 @@ export class PostService {
 
     return posts.map((post) => new PostTypeEntity[post.type](post));
   }
+
+  public async getPosts(): Promise<PostContentEntity[]> {
+    const posts = await this.postRepository.getFullList();
+
+    return posts.map((post) => new PostTypeEntity[post.type](post));
+  }
 }

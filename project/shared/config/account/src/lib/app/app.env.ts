@@ -21,7 +21,7 @@ export class AppConfiguration {
         validationError: { target: false, value: true },
       });
     } catch (errors) {
-      console.error('[DB Config Validation Error]:', errors);
+      console.error('[App Account Config Validation Error]:', errors);
 
       throw errors;
     }

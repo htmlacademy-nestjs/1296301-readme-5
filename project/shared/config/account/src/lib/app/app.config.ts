@@ -1,8 +1,8 @@
 import { registerAs, ConfigType } from '@nestjs/config';
 import { plainToClass } from 'class-transformer';
 
-import { AppConfiguration } from './app/app.env';
-import { DEFAULT_PORT, Environment } from './app/app.const';
+import { AppConfiguration } from './app.env';
+import { DEFAULT_PORT, Environment } from './app.const';
 
 async function getConfig(): Promise<AppConfiguration> {
   const config = plainToClass(AppConfiguration, {

@@ -144,4 +144,14 @@ export class BlogController {
 
     return data;
   }
+
+  @UseGuards(CheckAuthGuard)
+  @Get('send-news')
+  public async sendNews(@Req() req: Request) {
+    await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/news`,{
+      headers: {
+        'Authorization': req.headers['authorization'],
+      },
+    });
+  }
 }

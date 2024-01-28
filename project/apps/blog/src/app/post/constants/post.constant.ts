@@ -1,6 +1,5 @@
 export const DEFAULT_AMOUNT = 0;
 export const DEFAULT_STATUS = false;
-export const DEFAULT_POST_COUNT_LIMIT = 25;
 
 export enum PostMessages {
   Search = 'Search result by title',
@@ -12,6 +11,7 @@ export enum PostMessages {
   ShowAllUserDrafts = 'Show all user draft posts',
   ShowUserPostCount = 'User all posts count',
   Show = 'Post by id',
+  SendNews = 'News',
 }
 
 export const PostsError = {

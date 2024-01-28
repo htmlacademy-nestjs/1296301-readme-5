@@ -14,12 +14,14 @@ import { UpdatePostValidationPipe } from './pipes/update-post-validation.pipe';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 import { PostTypeRdo } from './rdo/post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @ApiTags('posts')
 @Controller('posts')
 export class PostController {
   constructor(
-    private readonly postService: PostService
+    private readonly postService: PostService,
+  private readonly notificationsService: NotificationsService,
   ) {}
 
   @ApiResponse({
@@ -138,5 +140,18 @@ export class PostController {
     @Param('id') id: string,
   ) {
     return await this.postService.deletePost(id, user.sub);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostMessages.SendNews
+  })
+  @UseGuards(CheckAuthGuard)
+  @Get('news')
+  public async sendNews(@Req() { user }: RequestWithTokenPayload) {
+    const { email, sub } = user;
+    const posts = await this.postService.getPosts();
+
+    await this.notificationsService.sendNews({ email, posts, id: sub });
   }
 }
