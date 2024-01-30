@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString } from 'class-validator';
+import { IsString, MinLength, MaxLength } from 'class-validator';
+
+import { MessageTextLength } from './message.constants';
 
 export class CreateMessageDto {
   @ApiProperty({
@@ -7,12 +9,14 @@ export class CreateMessageDto {
     example: 'Message',
   })
   @IsString()
+  @MinLength(MessageTextLength.Min)
+  @MaxLength(MessageTextLength.Max)
   public message: string;
 
   @ApiProperty({
     description: 'Post ID',
     example: '1',
   })
-  @IsInt()
+  @IsString()
   public postId: string;
 }

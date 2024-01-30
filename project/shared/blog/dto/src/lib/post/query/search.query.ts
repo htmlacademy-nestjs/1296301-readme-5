@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsIn, IsNumber, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 import { SortDirection } from '@project/shared/app/types';
@@ -28,5 +28,7 @@ export class SearchQuery {
     description: 'Title',
     example: 'title',
   })
+  @IsString()
+  @Transform(({ value }) => decodeURIComponent(value))
   public title?: string = '';
 }

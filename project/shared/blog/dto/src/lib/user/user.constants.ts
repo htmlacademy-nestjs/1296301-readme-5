@@ -1,2 +1,13 @@
-export const AUTH_USER_EMAIL_NOT_VALID = 'The email is not valid';
-export const AUTH_USER_DATE_BIRTH_NOT_VALID = 'The user date birth is not valid';
+export enum AuthUserInfo {
+  NotValidEmail = 'The email is not valid'
+}
+
+export const NameLength = {
+  Min: 3,
+  Max: 50,
+};
+
+export enum PasswordLength {
+  Min = 6,
+  Max = 12
+}

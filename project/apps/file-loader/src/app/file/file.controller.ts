@@ -1,6 +1,5 @@
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
-  ConflictException,
   Controller,
   Get,
   HttpStatus,
@@ -9,14 +8,15 @@ import {
   UploadedFile,
   UseInterceptors
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/core';
 
-import { FileLoaderInfo, MAX_AVATAR_SIZE_IN_KILOBYTES, MAX_PHOTO_SIZE_IN_KILOBYTES, maxAvatarSizeInBytes, maxPhotoSizeInBytes } from './file.constants';
+import { FileLoaderInfo } from './file.constants';
 import { FileService } from './file.service';
 import { UploadedFileRdo } from './rdo/uploaded-file.rdo';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileValidationPipe } from './pipes/validate-file.pipe';
 
 @ApiTags('files')
 @Controller('files')
@@ -30,12 +30,9 @@ export class FileController {
     status: HttpStatus.OK,
     description: FileLoaderInfo.Uploaded,
   })
-  @UseInterceptors(FileInterceptor('file') as any)
+  @UseInterceptors(FileInterceptor('avatar') as any)
   @Post('upload/avatar')
-  public async uploadAvatar(@UploadedFile() file: Express.Multer.File) {
-    if (file.size > maxAvatarSizeInBytes) {
-      throw new ConflictException(`File size is more than ${MAX_AVATAR_SIZE_IN_KILOBYTES}kb.`);
-    }
+  public async uploadAvatar(@UploadedFile(FileValidationPipe) file: Express.Multer.File) {
     const fileEntity = await this.fileService.saveFile(file);
 
     return fillDto(UploadedFileRdo, fileEntity.toPOJO());
@@ -46,12 +43,9 @@ export class FileController {
     status: HttpStatus.OK,
     description: FileLoaderInfo.Uploaded,
   })
-  @UseInterceptors(FileInterceptor('file') as any)
+  @UseInterceptors(FileInterceptor('photo') as any)
   @Post('upload/photo')
-  public async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    if (file.size > maxPhotoSizeInBytes) {
-      throw new ConflictException(`File size is more than ${MAX_PHOTO_SIZE_IN_KILOBYTES}kb.`);
-    }
+  public async uploadFile(@UploadedFile(FileValidationPipe) file: Express.Multer.File) {
     const fileEntity = await this.fileService.saveFile(file);
 
     return fillDto(UploadedFileRdo, fileEntity.toPOJO());
