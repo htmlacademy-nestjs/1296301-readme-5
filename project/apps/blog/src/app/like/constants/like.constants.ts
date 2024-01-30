@@ -1,4 +1,4 @@
-export enum LikesMessage {
+export enum LikesInfo {
   Add = 'Like added',
   Show = 'Like by post',
   Delete = 'Like removed',

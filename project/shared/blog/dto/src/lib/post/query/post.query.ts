@@ -1,8 +1,9 @@
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNumber, IsOptional } from 'class-validator';
+import { IsIn, IsNumber, IsOptional, MaxLength, MinLength } from 'class-validator';
 
 import { PostType, SortBy, SortDirection } from '@project/shared/app/types';
+import { TagDefaultParam } from '../post.constants';
 
 import { DEFAULT_PAGE_COUNT, DEFAULT_POST_COUNT_LIMIT, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_BY } from './post.constant';
 
@@ -44,6 +45,8 @@ export class PostQuery {
     example: 'tag',
   })
   @IsOptional()
+  @MinLength(TagDefaultParam.MinLength)
+  @MaxLength(TagDefaultParam.MaxLength)
   public tag?: string = '';
 
   @ApiProperty({

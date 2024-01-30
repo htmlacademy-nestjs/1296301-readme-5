@@ -6,8 +6,7 @@ export class LoggedUserRdo {
     description: 'The uniq user ID',
     example: '13'
   })
-  @Expose({name: '_id'})
-  @Transform(({ obj }) => obj._id.toString())
+  @Expose()
   public id: string;
 
   @ApiProperty({
@@ -23,7 +22,6 @@ export class LoggedUserRdo {
   })
   @Expose()
   public accessToken: string;
-
 
   @ApiProperty({
     description: 'Refresh token',

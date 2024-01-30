@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsUrl } from 'class-validator';
+import { IsOptional, IsUrl, MaxLength } from 'class-validator';
 
 import { UpdateBasePostDto } from './update-base-post.dto';
+import { LINK_DESCRIPTION_LENGTH } from '../post.constants';
 
 export class UpdateLinkPostDto extends UpdateBasePostDto {
   @ApiProperty({
@@ -9,7 +10,6 @@ export class UpdateLinkPostDto extends UpdateBasePostDto {
     example: 'https://example.com',
   })
   @IsUrl()
-  @IsNotEmpty()
   @IsOptional()
   public link?: string;
 
@@ -17,7 +17,7 @@ export class UpdateLinkPostDto extends UpdateBasePostDto {
     description: 'Post link description',
     example: 'Description',
   })
-  @IsNotEmpty()
   @IsOptional()
+  @MaxLength(LINK_DESCRIPTION_LENGTH)
   public description?: string;
 }

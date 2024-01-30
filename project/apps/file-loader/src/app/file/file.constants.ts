@@ -1,9 +1,22 @@
-export enum FileLoaderMessages {
+export enum FileLoaderInfo {
   Uploaded = 'File is uploaded',
   Show = 'Show file path',
 }
 
-export const MAX_AVATAR_SIZE_IN_KILOBYTES = 500;
-export const MAX_PHOTO_SIZE_IN_KILOBYTES = 1000;
-export const maxAvatarSizeInBytes = MAX_AVATAR_SIZE_IN_KILOBYTES * 1024;
-export const maxPhotoSizeInBytes = MAX_PHOTO_SIZE_IN_KILOBYTES * 1024;
+export const  FileError = {
+  FileNotFound : "File with such id is not found",
+  MimetypeError: "Wrong file mimetype",
+  InvalidSize: "File size is too big",
+} as const;
+
+export const MaxImageSizeInByte = {
+  Avatar: 512000,
+  Photo: 1048576,
+} as const;
+
+export const ImageType = {
+  Avatar: 'avatar',
+  Photo: 'photo',
+} as const;
+
+export const ALLOWED_MIMETYPES = ['jpeg','jpg','png'];

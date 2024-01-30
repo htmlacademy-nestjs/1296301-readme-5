@@ -6,7 +6,7 @@ import { RequestWithTokenPayload } from '@project/shared/app/types';
 import { CreatePostDto, UpdatePostDto, PostQuery, SearchQuery } from '@project/shared/blog/dto';
 
 import { PostService } from './post.service';
-import { PostMessages, PostsError } from './constants/post.constant';
+import { PostInfo, PostsError } from './constants/post.constant';
 
 import { CreatePostValidationPipe } from './pipes/create-post-validation.pipe';
 import { UpdatePostValidationPipe } from './pipes/update-post-validation.pipe';
@@ -26,7 +26,7 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.Show,
+    description: PostInfo.Show,
   })
   @Get(':id')
   public async show(@Param('id') id: string) {
@@ -37,7 +37,7 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.ShowAll,
+    description: PostInfo.ShowAll,
   })
   @Get('/')
   public async index(@Query() query: PostQuery) {
@@ -52,7 +52,7 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.ShowUserPostCount,
+    description: PostInfo.ShowUserPostCount,
   })
   @Get('user-posts-count/:id')
   public async getUserPosts(@Param('id') id: string) {
@@ -61,7 +61,7 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.Search,
+    description: PostInfo.Search,
   })
   @Get('search')
   async search(@Query() query: SearchQuery) {
@@ -72,7 +72,7 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.ShowAllUserDrafts,
+    description: PostInfo.ShowAllUserDrafts,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -87,8 +87,8 @@ export class PostController {
   }
 
   @ApiResponse({
-    status: HttpStatus.OK,
-    description: PostMessages.Add,
+    status: HttpStatus.CREATED,
+    description: PostInfo.Add,
   })
   @Post('add')
   public async create(@Body(CreatePostValidationPipe) dto: CreatePostDto) {
@@ -99,7 +99,7 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.Repost,
+    description: PostInfo.Repost,
   })
   @UseGuards(CheckAuthGuard)
   @Post('/repost/:id')
@@ -114,7 +114,7 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.Update,
+    description: PostInfo.Update,
   })
   @UseGuards(CheckAuthGuard)
   @Patch(':id')
@@ -130,9 +130,12 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
-    description: PostMessages.Remove,
+    description: PostInfo.Remove,
   })
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: PostsError.Delete
+  })
   @UseGuards(CheckAuthGuard)
   @Delete(':id')
   public async destroy(
@@ -144,7 +147,7 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostMessages.SendNews
+    description: PostInfo.SendNews
   })
   @UseGuards(CheckAuthGuard)
   @Get('news')
