@@ -5,3 +5,4 @@ import { TextPostEntity } from './text-post.entity';
 import { VideoPostEntity } from './video-post.entity';
 
 export type PostContentEntity = LinkPostEntity | PhotoPostEntity | QuotePostEntity | TextPostEntity | VideoPostEntity;
+

@@ -1,23 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { PrismaClient } from '../../../../../node_modules/.prisma/client';
+import { Prisma } from '@prisma/client';
 
 import { BasePostgresRepository } from '@project/shared/core';
 import { PrismaClientService } from '@project/shared/blog/models';
 import { PostQuery, SearchQuery } from '@project/shared/blog/dto';
-import { PublicationStatus, PaginationResult, PostContentType, SortBy, EntityIdType } from '@project/shared/app/types';
+import { PublicationStatus, PaginationResult, PostContentType, SortBy } from '@project/shared/app/types';
 
+import { postTypeEntityAdapter } from './post-entity/post-type.entity';
 import { PostContentEntity } from './post-entity/post-content-entity.type';
 
 @Injectable()
-export class PostRepository extends BasePostgresRepository<PostContentEntity, EntityIdType, PostContentType> {
+export class PostRepository extends BasePostgresRepository<PostContentEntity, PostContentType> {
   constructor(
     protected readonly client: PrismaClientService,
   ) {
-    super(client);
+    super(client, postTypeEntityAdapter);
   }
 
-  public async getPostCount(where: PrismaClient.PostWhereInput): Promise<number> {
+  public async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
     return this.client.post.count({ where });
   }
 
@@ -25,7 +26,7 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
     return Math.ceil(totalCount / limit);
   }
 
-  public async save(entity: PostContentEntity): Promise<PostContentType> {
+  public async save(entity: PostContentEntity): Promise<PostContentEntity> {
     const pojoEntity = entity.toPOJO();
 
     const record = await this.client.post.create({
@@ -34,19 +35,22 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
         messages: {
           connect: [],
         },
-        include: {
-          messages: true,
-          likes: true
+        likes: {
+          connect: [],
         },
+      },
+      include: {
+        messages: true,
+        likes: true,
       },
     });
 
     entity.id = record.id;
 
-    return record;
+    return entity;
   }
 
-  public async deleteById(id: string): Promise<void> {
+  public async delete(id: string): Promise<void> {
     await this.client.post.delete({
       where: {
         id
@@ -58,13 +62,14 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
     });
   }
 
-  public async findById(id: string): Promise<PostContentType> {
+  public async findById(id: string): Promise<PostContentEntity> {
     const document = await this.client.post.findFirst({
       where: {
         id,
       },
       include: {
         messages: true,
+        likes: true,
       },
     });
 
@@ -72,16 +77,11 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       throw new NotFoundException(`Post with id:${id} not found.`);
     }
 
-    document.messagesCount = document._count.messages;
-    document.likesCount = document._count.likes;
-
-    delete document._count;
-
-    return document;
+    return this.createEntityFromDocument(document);
   }
 
-  public search({ title, limit }: SearchQuery): Promise<PostContentType[]> {
-    const records = this.client.post.findMany({
+  public async search({ title, limit }: SearchQuery): Promise<PostContentEntity[]> {
+    const records = await this.client.post.findMany({
       where: {
         title: {
           contains: title
@@ -90,84 +90,65 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       take: limit,
       include: {
         messages: true,
-      },
-      select: {
+        likes: true,
         _count: {
           select: {
             messages: true,
+            likes: true
           },
         },
       },
     });
 
-    return records.map(({ _count, ...record }) => ({ ...record, likesCount: _count.likes, messages: _count.messages }));
+    return records.map(({ _count, ...record }) => this.createEntityFromDocument({ ...record, messagesCount: _count.messages, likesCount: _count.likes }));
   }
 
-  public findUnpublishedPosts(userId: string): Promise<PostContentType[]> {
-    const records = this.client.post.findMany({
+  public async findUnpublishedPosts(userId: string): Promise<PostContentEntity[]> {
+    const records = await this.client.post.findMany({
       where: {
         userId,
         status: PublicationStatus.Draft,
       },
       include: {
         messages: true,
-      },
-      select: {
-        _count: {
-          select: {
-            messages: true,
-            likes: true
-          },
-        },
+        likes: true,
       },
     });
 
-    return records.map((record) => {
-      record.messagesCount = record._count.messages;
-      record.likesCount = record._count.likes;
-
-      delete record._count;
-
-      return record;
-    });
+    return records.map((record) => this.createEntityFromDocument(record));
   }
 
-  public async update(id: string, entity: PostContentEntity): Promise<PostContentType> {
+  public async update(id: string, entity: PostContentEntity): Promise<PostContentEntity> {
     const pojoEntity = entity.toPOJO();
 
     const record = await this.client.post.update({
       where: { id },
-      data: { ...pojoEntity },
+      data: {
+        ...pojoEntity,
+        messages: {
+          connect: [],
+        },
+        likes: {
+          connect: [],
+        },
+      },
       include: {
         messages: true,
         likes: true,
       },
-      select: {
-        _count: {
-          select: {
-            messages: true,
-            likes: true
-          },
-        },
-      },
     });
 
-    record.messagesCount = record._count.messages;
-    record.likesCount = record._count.likes;
-
-    delete record._count;
-
-    return record;
+    return this.createEntityFromDocument(record);
   }
 
-  public async find(query?: PostQuery): Promise<PaginationResult<PostContentType>> {
+  public async find(query?: PostQuery): Promise<PaginationResult<PostContentEntity>> {
     const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
     const take = query?.limit;
     const orderBy = query.sortBy !== SortBy.CreatedAt
       ? { [query.sortBy]: { _count: query.sortDirection } }
       : { [query.sortBy]: query.sortDirection };
 
-    const where: PrismaClient.PostWhereInput = {
+    const where: Prisma.PostWhereInput = {
       status: PublicationStatus.Published,
     };
 
@@ -189,8 +170,7 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
       this.client.post.findMany({ where, orderBy, skip, take,
         include: {
           messages: true,
-        },
-        select: {
+          likes: true,
           _count: {
             select: {
               messages: true,
@@ -203,14 +183,7 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
     ]);
 
     return {
-      entities: records.map((record) => {
-        record.messagesCount = record._count.messages;
-        record.likesCount = record._count.likes;
-
-        delete record._count;
-
-        return record;
-      }),
+      entities: records.map(({ _count, ...record }) => this.createEntityFromDocument({ ...record, messagesCount: _count.messages, likesCount: _count.likes })),
       currentPage: query?.page,
       totalPages: PostRepository.calculatePostsPage(postCount, take),
       itemsPerPage: take,
@@ -218,15 +191,23 @@ export class PostRepository extends BasePostgresRepository<PostContentEntity, En
     }
   }
 
-  public async getFullList(): Promise<PostContentType[]> {
-    return await this.client.post.findMany({
+  public async getFullList(): Promise<PostContentEntity[]> {
+    const records = await this.client.post.findMany({
       where: {
         status: PublicationStatus.Published,
       },
       include: {
         messages: true,
         likes: true,
+        _count: {
+          select: {
+            messages: true,
+            likes: true
+          },
+        },
       },
     });
+
+    return records.map(({ _count, ...record }) => this.createEntityFromDocument({ ...record, messagesCount: _count.messages, likesCount: _count.likes }));
   }
 }

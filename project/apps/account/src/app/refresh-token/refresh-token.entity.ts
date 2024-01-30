@@ -1,6 +1,6 @@
 import { Entity, Token } from '@project/shared/app/types';
 
-export class RefreshTokenEntity implements Entity<RefreshTokenEntity>, Token {
+export class RefreshTokenEntity implements Entity<string>, Token {
   public createdAt: Date;
   public expiresIn: Date;
   public id?: string;
@@ -9,6 +9,7 @@ export class RefreshTokenEntity implements Entity<RefreshTokenEntity>, Token {
   [key: string]: unknown;
 
   constructor(refreshToken: Token) {
+    this.createdAt = new Date;
     this.populate(refreshToken);
   }
 
@@ -16,19 +17,13 @@ export class RefreshTokenEntity implements Entity<RefreshTokenEntity>, Token {
     this.userId = entity.userId;
     this.id = entity.id;
     this.tokenId = entity.tokenId;
-    this.createdAt = entity.createdAt ?? new Date();
+    this.createdAt = entity.createdAt;
     this.expiresIn = entity.expiresIn;
 
     return this;
   }
 
-  public toPOJO(): Token {
-    return {
-      id: this.id,
-      userId: this.userId,
-      tokenId: this.tokenId,
-      createdAt: this.createdAt,
-      expiresIn: this.expiresIn,
-    };
+  public toPOJO(): RefreshTokenEntity {
+    return { ...this };
   }
 }

@@ -1,21 +1,22 @@
-import { Post, PostType, Entity, Message, PublicationStatus } from '@project/shared/app/types';
+import { Post, PostType, PostTypeValues, PublicationStatusValues, Entity, Message, Like, PublicationStatus } from '@project/shared/app/types';
 
 import { DEFAULT_AMOUNT, DEFAULT_STATUS } from '../constants/post.constant';
 
 export abstract class PostEntity implements Post, Entity<string, Post> {
   public id?: string;
-  public userId: string;
+  public userId?: string;
   public originalUserId?: string;
   public originalPostId?: string;
-  public type: PostType;
+  public type: PostTypeValues;
   public createdAt?: Date;
   public publicatedAt?: Date;
-  public status: PublicationStatus;
+  public status: PublicationStatusValues;
   public isRepost: boolean;
   public tags?: string[];
-  public likesCount: number;
-  public messagesCount: number;
+  public likesCount?: number;
+  public messagesCount?: number;
   public messages: Message[];
+  public likes: Like[];
 
   protected constructor(post: Post) {
     this.populate(post);
@@ -23,7 +24,7 @@ export abstract class PostEntity implements Post, Entity<string, Post> {
 
   public populate(data: Post): PostEntity {
     this.id = data.id ?? undefined;
-    this.userId = data.userId;
+    this.userId = data.userId ?? undefined;
     this.originalUserId = data.originalUserId ?? undefined;
     this.originalPostId = data.originalPostId ?? undefined;
     this.type = data.type;
@@ -31,10 +32,11 @@ export abstract class PostEntity implements Post, Entity<string, Post> {
     this.publicatedAt = data.publicatedAt ?? undefined;
     this.status = data.status;
     this.isRepost = data.isRepost ?? DEFAULT_STATUS;
-    this.likesCount = data.likesCount ?? DEFAULT_AMOUNT;
-    this.messagesCount = data.messagesCount ?? DEFAULT_AMOUNT;
+    this.likesCount = data.likesCount;
+    this.messagesCount = data.messagesCount;
     this.tags = data.tags ?? [];
-    this.messages = [];
+    this.messages = data.messages ?? [];
+    this.likes = data.likes ?? [];
 
     return this;
   }
@@ -54,6 +56,7 @@ export abstract class PostEntity implements Post, Entity<string, Post> {
       messagesCount: this.messagesCount,
       tags: this.tags,
       messages: [],
+      likes: [],
     };
   }
 }

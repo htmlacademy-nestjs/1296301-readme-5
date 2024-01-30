@@ -53,7 +53,7 @@ export class BlogController {
     return data;
   }
 
-  @Get('publications')
+  @Get('posts')
   public async showPublications(@Query() query: PostQuery) {
     const { data } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/`, {
       params: query

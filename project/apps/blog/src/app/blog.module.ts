@@ -8,7 +8,13 @@ import { MessageModule } from './message/message.module';
 import { BlogNotifyModule } from './notifications/notifications.module';
 
 @Module({
-  imports: [PostModule, MessageModule, LikeModule, ConfigBlogModule, BlogNotifyModule],
+  imports: [
+    PostModule,
+    MessageModule,
+    LikeModule,
+    ConfigBlogModule,
+    BlogNotifyModule,
+  ],
   controllers: [],
   providers: [],
   exports: []

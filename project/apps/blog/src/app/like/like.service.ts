@@ -10,14 +10,16 @@ export class LikeService {
     private readonly likeRepository: LikeRepository,
   ) {}
 
-  public async create(postId: string, userId: string) {
+  public async create(postId: string, userId: string): Promise<LikeEntity> {
     const like = await this.likeRepository.find(postId, userId);
 
     if (like) {
       throw new BadRequestException(LikeError.AlreadyExist)
     }
 
-    return await this.likeRepository.create(new LikeEntity({ postId, userId }));
+    const likeEntity = new LikeEntity().populate({ postId, userId })
+
+    return await this.likeRepository.create(likeEntity);
   }
 
   public async findByPostId(postId: string): Promise<LikeEntity[]> {

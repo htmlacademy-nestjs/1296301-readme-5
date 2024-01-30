@@ -22,3 +22,8 @@ export const PostsError = {
   NotUserAuthor: 'User is not an author of this Post',
   EmptyList: 'Posts list is empty',
 } as const;
+
+export enum HttpClientParam {
+  MaxRedirect = 5,
+  Timeout = 5000
+}

@@ -9,9 +9,9 @@ import { UpdateVideoPostDto } from './update-video-post.dto';
 export type UpdatePostDto = UpdateLinkPostDto | UpdatePhotoPostDto | UpdateQuotePostDto | UpdateTextPostDto | UpdateVideoPostDto;
 
 export const UpdateTypePostDdo = {
-  [PostType.Video]: UpdateVideoPostDto,
-  [PostType.Text]: UpdateTextPostDto,
-  [PostType.Link]: UpdateLinkPostDto,
-  [PostType.Photo]: UpdatePhotoPostDto,
-  [PostType.Quote]: UpdateQuotePostDto
+  [PostType.video]: UpdateVideoPostDto,
+  [PostType.text]: UpdateTextPostDto,
+  [PostType.link]: UpdateLinkPostDto,
+  [PostType.photo]: UpdatePhotoPostDto,
+  [PostType.quote]: UpdateQuotePostDto
 };

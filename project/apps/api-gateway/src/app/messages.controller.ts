@@ -6,7 +6,7 @@ import { CreateMessageDto, UpdateMessageDto, MessageQuery } from '@project/share
 import { AxiosExceptionFilter } from './filters/axios-exeption.filter';
 import { ApplicationServiceURL } from './app.config';
 
-@Controller('comments')
+@Controller('messages')
 @UseFilters(AxiosExceptionFilter)
 export class CommentsController {
   constructor(

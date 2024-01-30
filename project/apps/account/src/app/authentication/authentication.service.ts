@@ -1,8 +1,8 @@
 import * as crypto from 'node:crypto';
 import {
   Injectable, Inject, ConflictException,
-  UnauthorizedException, NotFoundException, BadRequestException,
-  Logger } from '@nestjs/common';
+  UnauthorizedException, NotFoundException,
+  BadRequestException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
@@ -19,8 +19,6 @@ import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 
 @Injectable()
 export class AuthenticationService {
-  private readonly logger = new Logger(AuthenticationService.name);
-
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
 

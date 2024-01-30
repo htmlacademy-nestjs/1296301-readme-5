@@ -1,4 +1,4 @@
-import { Entity, Like } from '@project/shared/app/types';
+import { Entity, Like } from "@project/shared/app/types";
 
 export class LikeEntity implements Like, Entity<string, Like> {
   public id?: string;
@@ -6,10 +6,6 @@ export class LikeEntity implements Like, Entity<string, Like> {
   public userId: string;
   public createdAt: Date;
   public updatedAt: Date;
-
-  constructor(like: Like) {
-    this.populate(like);
-  }
 
   public toPOJO() {
     return {
@@ -29,5 +25,11 @@ export class LikeEntity implements Like, Entity<string, Like> {
     this.updatedAt = new Date();
 
     return this;
+  }
+
+
+  static fromObject(data: Like): LikeEntity {
+    return new LikeEntity()
+      .populate(data);
   }
 }

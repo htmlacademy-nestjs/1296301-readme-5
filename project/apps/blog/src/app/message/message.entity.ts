@@ -2,18 +2,14 @@ import { Message, Entity } from '@project/shared/app/types';
 
 export class MessageEntity implements Message, Entity<string, Message> {
   public id?: string;
-  public postId?: string;
+  public postId: string;
   public message: string;
   public userId: string;
   public createdAt: Date;
   public updatedAt: Date;
 
-  constructor(message: Message) {
-    this.populate(message)
-  }
-
   public populate(data: Message): MessageEntity {
-    this.id = data.id ?? undefined;
+    this.id = data.id;
     this.message = data.message;
     this.postId = data.postId;
     this.userId = data.userId;
@@ -32,5 +28,10 @@ export class MessageEntity implements Message, Entity<string, Message> {
       message: this.message,
       userId: this.userId
     };
+  }
+
+  static fromObject(data: Message): MessageEntity {
+    return new MessageEntity()
+      .populate(data);
   }
 }

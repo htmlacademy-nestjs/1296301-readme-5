@@ -9,9 +9,9 @@ import { QuotePostRdo } from './quote-post.rdo';
 export type PostRdo = PhotoPostRdo | VideoPostRdo | TextPostRdo | LinkPostRdo | QuotePostRdo;
 
 export const PostTypeRdo = {
-  [PostType.Video]: VideoPostRdo,
-  [PostType.Text]: TextPostRdo,
-  [PostType.Link]: LinkPostRdo,
-  [PostType.Photo]: PhotoPostRdo,
-  [PostType.Quote]: QuotePostRdo,
+  [PostType.video]: VideoPostRdo,
+  [PostType.text]: TextPostRdo,
+  [PostType.link]: LinkPostRdo,
+  [PostType.photo]: PhotoPostRdo,
+  [PostType.quote]: QuotePostRdo,
 };

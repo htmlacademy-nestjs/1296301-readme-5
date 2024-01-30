@@ -9,12 +9,12 @@ export class LinkPostRdo extends BasePostRdo {
     example: 'https://example.com',
   })
   @Expose()
-  public link: string;
+  public link?: string;
 
   @ApiProperty({
     description: 'Description of post link',
     example: 'Description',
   })
   @Expose()
-  public description: string;
+  public description?: string;
 }

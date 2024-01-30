@@ -9,5 +9,5 @@ export class PhotoPostRdo extends BasePostRdo {
     example: 'example.jpg',
   })
   @Expose()
-  public link: string;
+  public link?: string;
 }

@@ -1,17 +1,24 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 
 import { PrismaClientModule } from '@project/shared/blog/models';
 import { JwtAccessStrategy, getJwtOptions } from '@project/shared/helpers';
+import { CheckAuthGuard } from '../guards/check-auth.guard';
 
 import { MessageController } from './message.controller';
 import { MessageService } from './message.service';
 import { MessageRepository } from './message.repository';
+import { HttpClientParam } from '../post/constants/post.constant';
 
 @Module({
   imports: [
     PrismaClientModule,
+    HttpModule.register({
+      timeout: HttpClientParam.Timeout,
+      maxRedirects: HttpClientParam.MaxRedirect,
+    }),
     JwtModule.registerAsync({
       imports: [],
       inject: [ConfigService],
@@ -19,7 +26,7 @@ import { MessageRepository } from './message.repository';
     }),
   ],
   controllers: [MessageController],
-  providers: [MessageService, MessageRepository, JwtAccessStrategy],
+  providers: [MessageService, MessageRepository, JwtAccessStrategy, CheckAuthGuard],
   exports: [MessageRepository]
 })
 export class MessageModule {}

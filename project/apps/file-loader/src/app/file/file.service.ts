@@ -1,7 +1,7 @@
 import 'multer';
 import dayjs from 'dayjs';
 import { extension } from 'mime-types';
-import { Inject, Injectable, Logger, NotFoundException, ConflictException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
 import { join } from 'node:path';

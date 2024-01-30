@@ -9,12 +9,12 @@ export class VideoPostRdo extends BasePostRdo {
     example: 'Title',
   })
   @Expose()
-  public title: string;
+  public title?: string;
 
   @ApiProperty({
     description: 'Video link text',
     example: 'https://youtu.be/FZ-9Wb',
   })
   @Expose()
-  public link: string;
+  public link?: string;
 }

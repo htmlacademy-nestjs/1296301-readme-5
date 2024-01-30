@@ -2,7 +2,7 @@ import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { ArgumentMetadata, BadRequestException, PipeTransform } from '@nestjs/common';
 
-import { UpdateMessageDto } from '../dto/update-message.dto';
+import { UpdateMessageDto } from '@project/shared/blog/dto';
 
 const TYPE = 'body';
 

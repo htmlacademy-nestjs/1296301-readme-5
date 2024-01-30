@@ -1,34 +1,38 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaClientService } from '@project/shared/blog/models';
-import { EntityIdType, Like } from '@project/shared/app/types';
+import { Like } from '@project/shared/app/types';
 import { BasePostgresRepository } from '@project/shared/core';
 
 import { LikeEntity } from './like.entity';
 
 @Injectable()
-export class LikeRepository extends BasePostgresRepository<LikeEntity, EntityIdType, Like>  {
-  constructor(private readonly client: PrismaClientService) {
-    super(client);
+export class LikeRepository extends BasePostgresRepository<LikeEntity, Like>  {
+  constructor(protected readonly client: PrismaClientService) {
+    super(client, LikeEntity.fromObject);
   }
 
-  public async create(item: LikeEntity): Promise<LikeEntity> {
+  public async create(entity: LikeEntity): Promise<LikeEntity> {
+    const pojoEntity = entity.toPOJO();
+
     const record = await this.client.like.create({
-      data: {
-        ...item.toPOJO(),
-      },
+      data: { ...pojoEntity },
     });
 
-    return new LikeEntity(record);
+    entity.id = record.id;
+
+    return entity;
   }
 
-  public async find(postId: string, userId: string): Promise<Like> {
-    return await this.client.like.findFirst({
+  public async find(postId: string, userId: string): Promise<LikeEntity> {
+    const record = await this.client.like.findFirst({
       where: {
         postId,
         userId
       }
     });
+
+    return this.createEntityFromDocument(record);
   }
 
   public async findByPostId(postId: string): Promise<LikeEntity[]> {
@@ -38,7 +42,7 @@ export class LikeRepository extends BasePostgresRepository<LikeEntity, EntityIdT
       },
     });
 
-    return likes.map((like) => new LikeEntity(like));
+    return likes.map((like) => this.createEntityFromDocument(like));
   }
 
   public async delete(id: string): Promise<void> {
