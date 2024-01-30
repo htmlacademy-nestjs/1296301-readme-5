@@ -5,6 +5,7 @@ import { fillDto } from '@project/shared/helpers';
 import { RequestWithTokenPayload } from '@project/shared/app/types';
 import { ChangePasswordUserDto, CreateUserDto } from '@project/shared/blog/dto';
 
+import { UserInfo } from './authentication.constants';
 import { AuthenticationService } from './authentication.service';
 import { UserRdo } from './rdo/user.rdo';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
@@ -20,7 +21,7 @@ interface RequestWithUser {
   user?: BlogUserEntity;
 }
 
-@ApiTags('authentication')
+@ApiTags('auth')
 @Controller('auth')
 export class AuthenticationController {
   constructor(
@@ -30,7 +31,7 @@ export class AuthenticationController {
 
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: 'The new user has been successfully created.'
+    description: UserInfo.Register,
   })
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
@@ -44,11 +45,11 @@ export class AuthenticationController {
   @ApiResponse({
     type: LoggedUserRdo,
     status: HttpStatus.OK,
-    description: 'User has been successfully logged.'
+    description: UserInfo.Login,
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Password or Login is wrong.',
+    description: UserInfo.WrongPassword,
   })
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -61,7 +62,7 @@ export class AuthenticationController {
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.OK,
-    description: 'User password has been successfully changed.'
+    description: UserInfo.UpdatePassword,
   })
   @Post('update-password')
   public async updatePassword(@Body() dto: ChangePasswordUserDto) {
@@ -73,7 +74,7 @@ export class AuthenticationController {
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.OK,
-    description: 'User found'
+    description: UserInfo.FoundUser,
   })
   @Get(':id')
   public async show(@Param('id') id: string ) {
@@ -84,7 +85,7 @@ export class AuthenticationController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Get a new access/refresh tokens'
+    description: UserInfo.RefreshToken,
   })
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshGuard)

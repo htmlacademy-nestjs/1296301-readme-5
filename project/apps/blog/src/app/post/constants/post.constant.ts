@@ -1,7 +1,7 @@
 export const DEFAULT_AMOUNT = 0;
 export const DEFAULT_STATUS = false;
 
-export enum PostMessages {
+export enum PostInfo {
   Search = 'Search result by title',
   Add = 'Post is added',
   Remove = 'Post removed',
@@ -27,3 +27,9 @@ export enum HttpClientParam {
   MaxRedirect = 5,
   Timeout = 5000
 }
+
+export const TagDefaultParam = {
+  MinLength: 3,
+  MaxLength: 10,
+  Amount: 8,
+};

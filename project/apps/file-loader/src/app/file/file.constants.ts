@@ -1,4 +1,4 @@
-export enum FileLoaderMessages {
+export enum FileLoaderInfo {
   Uploaded = 'File is uploaded',
   Show = 'Show file path',
 }

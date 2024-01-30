@@ -4,7 +4,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fillDto } from '@project/shared/helpers';
 import { RequestWithTokenPayload } from '@project/shared/app/types';
 
-import { LikesMessage } from './constants/like.constants';
+import { LikesInfo } from './constants/like.constants';
 import { LikeService } from './like.service';
 import { LikeRdo } from './rdo/like.rdo';
 import { CheckAuthGuard } from '../guards/check-auth.guard';
@@ -18,7 +18,7 @@ export class LikeController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: LikesMessage.Add
+    description: LikesInfo.Add
   })
   @UseGuards(CheckAuthGuard)
   @Post(':postId')
@@ -30,7 +30,7 @@ export class LikeController {
 
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
-    description: LikesMessage.Delete
+    description: LikesInfo.Delete
   })
   @UseGuards(CheckAuthGuard)
   @Delete(':postId')
@@ -40,7 +40,7 @@ export class LikeController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: LikesMessage.Show
+    description: LikesInfo.Show
   })
   @UseGuards(CheckAuthGuard)
   @Get(':postId')

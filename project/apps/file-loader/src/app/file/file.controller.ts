@@ -8,12 +8,12 @@ import {
   Post,
   UploadedFile,
   UseInterceptors
-} from "@nestjs/common";
+} from '@nestjs/common';
 
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/core';
 
-import { FileLoaderMessages, MAX_AVATAR_SIZE_IN_KILOBYTES, MAX_PHOTO_SIZE_IN_KILOBYTES, maxAvatarSizeInBytes, maxPhotoSizeInBytes } from "./file.constants";
+import { FileLoaderInfo, MAX_AVATAR_SIZE_IN_KILOBYTES, MAX_PHOTO_SIZE_IN_KILOBYTES, maxAvatarSizeInBytes, maxPhotoSizeInBytes } from './file.constants';
 import { FileService } from './file.service';
 import { UploadedFileRdo } from './rdo/uploaded-file.rdo';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -28,7 +28,7 @@ export class FileController {
   @ApiResponse({
     type: UploadedFileRdo,
     status: HttpStatus.OK,
-    description: FileLoaderMessages.Uploaded,
+    description: FileLoaderInfo.Uploaded,
   })
   @UseInterceptors(FileInterceptor('file') as any)
   @Post('upload/avatar')
@@ -44,7 +44,7 @@ export class FileController {
   @ApiResponse({
     type: UploadedFileRdo,
     status: HttpStatus.OK,
-    description: FileLoaderMessages.Uploaded,
+    description: FileLoaderInfo.Uploaded,
   })
   @UseInterceptors(FileInterceptor('file') as any)
   @Post('upload/photo')
@@ -60,7 +60,7 @@ export class FileController {
   @ApiResponse({
     type: UploadedFileRdo,
     status: HttpStatus.OK,
-    description: FileLoaderMessages.Show,
+    description: FileLoaderInfo.Show,
   })
   @Get(':fileId')
   public async show(@Param('fileId', MongoIdValidationPipe) fileId: string) {
