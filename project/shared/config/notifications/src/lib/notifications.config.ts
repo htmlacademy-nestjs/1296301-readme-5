@@ -12,7 +12,6 @@ type Environment = typeof ENVIRONMENTS[number];
 export interface NotifyConfig {
   environment: string;
   port: number;
-  uploadDirectory: string;
   db: {
     host: string;
     port: number;
@@ -41,10 +40,9 @@ export interface NotifyConfig {
 const validationSchema = Joi.object({
   environment: Joi.string().valid(...ENVIRONMENTS).required(),
   port: Joi.number().port().default(DEFAULT_PORT),
-  uploadDirectory: Joi.string().required(),
   db: Joi.object({
     host: Joi.string().valid().hostname(),
-    port: Joi.number().port(),
+    port: Joi.number().port().default(DEFAULT_MONGO_PORT),
     name: Joi.string().required(),
     user: Joi.string().required(),
     password: Joi.string().required(),
@@ -78,7 +76,6 @@ function getConfig(): NotifyConfig {
   const config: NotifyConfig = {
     environment: process.env.NODE_ENV as Environment,
     port: parseInt(process.env.PORT || `${DEFAULT_PORT}`, 10),
-    uploadDirectory: process.env.UPLOAD_DIRECTORY_PATH,
     db: {
       host: process.env.MONGO_HOST,
       port: parseInt(process.env.MONGO_PORT ?? DEFAULT_MONGO_PORT.toString(), 10),

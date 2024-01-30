@@ -3,32 +3,31 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BasePostgresRepository } from '@project/shared/core';
 import { PrismaClientService } from '@project/shared/blog/models';
 import { Message, EntityIdType } from '@project/shared/app/types';
+import { MessageQuery } from '@project/shared/blog/dto';
 
 import { MessageEntity } from './message.entity';
-import { MessageQuery } from './query/message.query';
 
 @Injectable()
-export class MessageRepository extends BasePostgresRepository<MessageEntity, EntityIdType, Message> {
+export class MessageRepository extends BasePostgresRepository<MessageEntity, Message> {
   constructor(
     protected readonly client: PrismaClientService,
   ) {
-    super(client);
+    super(client, MessageEntity.fromObject);
   }
 
-  public async save(entity: MessageEntity): Promise<Message> {
+  public async save(entity: MessageEntity): Promise<MessageEntity> {
+    const pojoEntity = entity.toPOJO();
+
     const record = await this.client.message.create({
-      data: {
-        message: entity.message,
-        userId: entity.userId,
-        postId: entity.postId,
-      },
+      data: { ...pojoEntity },
     });
+
     entity.id = record.id;
 
     return entity;
   }
 
-  public async findById(id: string): Promise<Message> {
+  public async findById(id: string): Promise<MessageEntity> {
     const record = await this.client.message.findFirst({
       where: {
         id,
@@ -39,10 +38,10 @@ export class MessageRepository extends BasePostgresRepository<MessageEntity, Ent
       throw new NotFoundException(`Message with id ${id} not found.`);
     }
 
-    return record;
+    return this.createEntityFromDocument(record);
   }
 
-  public async findByPostId({ limit, postId, sortDirection, page }: MessageQuery): Promise<Message[]> {
+  public async findByPost({ limit, postId, sortDirection, page }: MessageQuery): Promise<MessageEntity[]> {
     const records = await this.client.message.findMany({
       where: {
         postId,
@@ -58,16 +57,20 @@ export class MessageRepository extends BasePostgresRepository<MessageEntity, Ent
       throw new NotFoundException(`Messages with postId ${postId} not found.`);
     }
 
-    return records;
+    return records.map((record) => this.createEntityFromDocument(record));
   }
 
-  public async update(id: string, item: MessageEntity): Promise<Message> {
-    return await this.client.message.update({
+  public async update(id: string, entity: MessageEntity): Promise<MessageEntity> {
+    const pojoEntity = entity.toPOJO();
+
+    const record = await this.client.message.update({
       where: {
         id
       },
-      data: { ...item.toPOJO(), id }
+      data: { ...pojoEntity, id }
     });
+
+    return this.createEntityFromDocument(record);
   }
 
   public async delete(id: string): Promise<void> {

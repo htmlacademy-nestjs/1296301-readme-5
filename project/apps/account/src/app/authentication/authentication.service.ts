@@ -1,30 +1,34 @@
+import * as crypto from 'node:crypto';
 import {
   Injectable, Inject, ConflictException,
-  UnauthorizedException, NotFoundException, BadRequestException,
-  Logger, HttpException, HttpStatus, } from '@nestjs/common';
+  UnauthorizedException, NotFoundException,
+  BadRequestException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { dbConfig } from '@project/shared/config/account';
-import { Token, TokenPayload, User } from '@project/shared/app/types';
+import { createJWTPayload } from '@project/shared/helpers';
+import { dbConfig, jwtConfig } from '@project/shared/config/account';
+import { User } from '@project/shared/app/types';
+import { CreateUserDto, LoginUserDto, ChangePasswordUserDto } from '@project/shared/blog/dto';
 
 import { BlogUserRepository } from '../blog-user/blog-user.repository';
 import { AUTH_USER_EXISTS, AUTH_USER_WRONG, AUTH_USER_NOT_FOUND, AUTH_USER_NOT_CORRECT_PASSWORD } from './authentication.constants';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { ChangePasswordUserDto } from './dto/change-password-user.dto';
+
+import { RefreshTokenService } from '../refresh-token/refresh-token.service';
 
 @Injectable()
 export class AuthenticationService {
-  private readonly logger = new Logger(AuthenticationService.name);
-
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
 
     @Inject(dbConfig.KEY)
     private readonly dataBaseConfig: ConfigType<typeof dbConfig>,
     private readonly jwtService: JwtService,
+
+    @Inject(jwtConfig.KEY)
+    private readonly jwtOptions: ConfigType<typeof jwtConfig>,
+    private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
   public async register(dto: CreateUserDto) {
@@ -70,9 +74,19 @@ export class AuthenticationService {
     return existUser;
   }
 
+  public async getUserByEmail(email: string) {
+    const existUser = await this.blogUserRepository.findByEmail(email);
+
+    if (!existUser) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return existUser;
+  }
+
   public async changePassword(dto: ChangePasswordUserDto) {
-    const { id, password, newPassword } = dto;
-    const existUser = await this.blogUserRepository.findById(id);
+    const { password, newPassword, userId } = dto;
+    const existUser = await this.blogUserRepository.findById(userId);
 
     if (!await existUser.comparePassword(password)) {
       throw new BadRequestException(AUTH_USER_NOT_CORRECT_PASSWORD);
@@ -80,24 +94,21 @@ export class AuthenticationService {
 
     const userEntity = await existUser.setPassword(newPassword);
 
-    return await this.blogUserRepository.update(id, userEntity);
+    return await this.blogUserRepository.update(userId, userEntity);
   }
 
-  public async createUserToken(user: User): Promise<Token> {
-    const payload: TokenPayload = {
-      sub: user.id,
-      email: user.email,
-      userName: user.userName,
-      avatar: user.avatar,
+  public async createUserToken(user: User) {
+    const accessTokenPayload = createJWTPayload(user);
+    const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
+
+    await this.refreshTokenService.createRefreshSession(refreshTokenPayload);
+
+    return {
+      accessToken: await this.jwtService.signAsync(accessTokenPayload),
+      refreshToken: await this.jwtService.signAsync(refreshTokenPayload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.refreshTokenExpiresIn
+      }),
     };
-
-    try {
-      const accessToken = await this.jwtService.signAsync(payload);
-
-      return { accessToken };
-    } catch (error) {
-      this.logger.error('[Token generation error]: ' + error.message);
-      throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
   }
 }

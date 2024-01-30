@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../../../../node_modules/.prisma/client"
+  output   = "../../../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -25,23 +25,23 @@ enum PostStatus {
 }
 
 model Post {
-  id              String     @id @default(uuid()) @map("id")
-  userId          String?    @map("user_id")
-  type            PostType
-  status          PostStatus @default(published)
-  createdAt       DateTime   @default(now()) @map("created_at")
-  publicatedAt    DateTime   @updatedAt @map("publicated_at")
-  isRepost        Boolean    @default(false) @map("is_repost")
-  tags            String[]
-  likes           Like[]
-  messages        Message[]
-  originalUserId  String?    @map("original_user_id")
-  originalPostId  String?    @map("original_post_id")
-  title           String?
-  description     String?
-  link            String?
-  announcement    String?
-  quoteAuthor     String?    @map("quote_author")
+  id             String     @id @default(uuid()) @map("id")
+  userId         String?    @map("user_id")
+  type           PostType
+  status         PostStatus @default(published)
+  createdAt      DateTime   @default(now()) @map("created_at")
+  publicatedAt   DateTime   @updatedAt @map("publicated_at")
+  isRepost       Boolean    @default(false) @map("is_repost")
+  tags           String[]
+  likes          Like[]
+  messages       Message[]
+  originalUserId String?    @map("original_user_id")
+  originalPostId String?    @map("original_post_id")
+  title          String?
+  description    String?
+  link           String?
+  announcement   String?
+  quoteAuthor    String?    @map("quote_author")
 
   @@index([title])
   @@map("posts")

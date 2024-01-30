@@ -9,19 +9,19 @@ export class TextPostRdo extends BasePostRdo {
     example: 'Text',
   })
   @Expose()
-  public description: string;
+  public description?: string;
 
   @ApiProperty({
     description: 'Title of post',
     example: 'Title',
   })
   @Expose()
-  public title: string;
+  public title?: string;
 
   @ApiProperty({
     description: 'Announcement of post',
     example: 'Text',
   })
   @Expose()
-  public announcement: string;
+  public announcement?: string;
 }

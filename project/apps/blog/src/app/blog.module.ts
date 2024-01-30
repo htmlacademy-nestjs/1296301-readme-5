@@ -1,12 +1,20 @@
 import { Module } from '@nestjs/common';
 
+import { ConfigBlogModule } from '@project/shared/config/blog';
+
 import { PostModule } from './post/post.module';
 import { LikeModule } from './like/like.module';
 import { MessageModule } from './message/message.module';
-import { PublicationModule } from './publication/publication.module';
+import { BlogNotifyModule } from './notifications/notifications.module';
 
 @Module({
-  imports: [PostModule, PublicationModule, MessageModule, LikeModule],
+  imports: [
+    PostModule,
+    MessageModule,
+    LikeModule,
+    ConfigBlogModule,
+    BlogNotifyModule,
+  ],
   controllers: [],
   providers: [],
   exports: []

@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../../../node_modules/.prisma/client'
+import { PrismaClient } from '@prisma/client';
 import { PostType } from '../../../app/types/src';
 
 const FIRST_USER_ID = '658170cbb954e9f5b905ccf4';

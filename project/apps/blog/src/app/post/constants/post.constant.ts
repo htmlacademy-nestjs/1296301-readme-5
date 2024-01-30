@@ -1,12 +1,5 @@
-import { SortDirection, SortBy } from '@project/shared/app/types';
-
 export const DEFAULT_AMOUNT = 0;
 export const DEFAULT_STATUS = false;
-export const DEFAULT_POST_COUNT_LIMIT = 25;
-export const DEFAULT_POST_SEARCH_COUNT_LIMIT = 20;
-export const DEFAULT_SORT_DIRECTION = SortDirection.Desc;
-export const DEFAULT_SORT_BY = SortBy.CreatedAt;
-export const DEFAULT_PAGE_COUNT = 1;
 
 export enum PostMessages {
   Search = 'Search result by title',
@@ -15,7 +8,10 @@ export enum PostMessages {
   Repost = 'Reposted',
   Update = 'Post updated',
   ShowAll = 'All posts',
+  ShowAllUserDrafts = 'Show all user draft posts',
+  ShowUserPostCount = 'User all posts count',
   Show = 'Post by id',
+  SendNews = 'News',
 }
 
 export const PostsError = {
@@ -24,4 +20,10 @@ export const PostsError = {
   WrongType : 'Wrong post type',
   AlreadyReposted: 'You already reposted this Post',
   NotUserAuthor: 'User is not an author of this Post',
+  EmptyList: 'Posts list is empty',
 } as const;
+
+export enum HttpClientParam {
+  MaxRedirect = 5,
+  Timeout = 5000
+}

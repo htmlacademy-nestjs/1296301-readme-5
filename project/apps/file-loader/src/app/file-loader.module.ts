@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { FileLoaderConfigModule, getMongooseOptions } from '@project/shared/config/file-vault';
+import { FileLoaderConfigModule } from '@project/shared/config/file-vault';
+import { getMongooseOptions } from '@project/shared/helpers';
 
 import { FileModule } from './file/file.module';
 
@@ -9,7 +10,7 @@ import { FileModule } from './file/file.module';
   imports: [
     FileModule,
     FileLoaderConfigModule,
-    MongooseModule.forRootAsync(getMongooseOptions()),
+    MongooseModule.forRootAsync(getMongooseOptions('application.db')),
   ],
   controllers: [],
   providers: [],

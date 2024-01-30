@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import applicationConfig from './app.config';
-import mongoConfig from './mongo.config';
+import applicationConfig from './app/app.config';
+import mongoConfig from './mongodb/mongo.config';
 import jwtConfig from './jwt/jwt.config';
-import rabbitConfig from './rabbit.config';
+import rabbitConfig from './rabbit/rabbit.config';
 
-const ENV_USERS_FILE_PATH = 'apps/account/account.env';
+const ENV_ACCOUNT_FILE_PATH = 'apps/account/account.env';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ const ENV_USERS_FILE_PATH = 'apps/account/account.env';
       isGlobal: true,
       cache: true,
       load: [applicationConfig, mongoConfig, jwtConfig, rabbitConfig],
-      envFilePath: ENV_USERS_FILE_PATH
+      envFilePath: ENV_ACCOUNT_FILE_PATH
     }),
   ]
 })

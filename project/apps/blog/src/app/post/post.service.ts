@@ -1,16 +1,14 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { PostContentType, PaginationResult } from "@project/shared/app/types";
+import { PaginationResult } from '@project/shared/app/types';
+import { CreatePostDto, UpdatePostDto, PostQuery, SearchQuery } from '@project/shared/blog/dto';
 
 import { PostRepository } from './post.repository';
 import { PostsError } from './constants/post.constant';
 
 import { PostTypeEntity } from './post-entity/post-type.entity';
 import { PostContentEntity } from './post-entity/post-content-entity.type';
-import { PostQuery } from './query/post.query';
-import { SearchQuery } from './query/search.query';
-import { CreatePostDto } from './dto/create-post/create-post.dto';
-import { UpdatePostDto } from './dto/update-post/update-post.dto';
+
 
 @Injectable()
 export class PostService {
@@ -27,53 +25,53 @@ export class PostService {
     return newPost;
   }
 
-  public async deletePost(id: string): Promise<void> {
-    try {
-      await this.postRepository.deleteById(id);
-    } catch {
+  public async deletePost(id: string, userId: string): Promise<void> {
+    const deletingPost = await this.getPost(id);
+
+    if (deletingPost?.userId === userId) {
+      await this.postRepository.delete(id);
+    } else {
       throw new NotFoundException(`Post with ID ${id} not found`);
     }
   }
 
   public async getPost(id: string): Promise<PostContentEntity> {
-    const record = await this.postRepository.findById(id);
-
-    return new PostTypeEntity[record.type];
+    return await this.postRepository.findById(id);
   }
 
-  public async getAllPosts(query?: PostQuery): Promise<PaginationResult<PostContentEntity>> {
-    const { entities, ...params } = await this.postRepository.find(query);
-
-    return {
-      entities: entities.map((document: PostContentType): PostContentEntity => {
-        return new PostTypeEntity[document.type](document);
-      }),
-      ...params,
-    };
+  public async getUserPostsCount(id: string): Promise<number> {
+    return await this.postRepository.getPostCount({ userId: id });
   }
 
-  public async updatePost(id: string, dto: UpdatePostDto): Promise<PostContentEntity> {
+  public async getAllPostsByQuery(query?: PostQuery): Promise<PaginationResult<PostContentEntity>> {
+    return await this.postRepository.find(query);
+  }
+
+  public async updatePost(id: string, dto: UpdatePostDto, userId: string): Promise<PostContentEntity> {
     const existsPost = await this.postRepository.findById(id);
-    const existsPostEntity = new PostTypeEntity[existsPost.type](existsPost);
+
+    if (existsPost?.userId !== userId) {
+      throw new NotFoundException(`You can't update post with ID ${id}`);
+    }
+
     let hasChanges = false;
 
     for (const [key, value] of Object.entries(dto)) {
-      if (value !== undefined && key !== 'categories' && existsPostEntity[key] !== value) {
-        existsPostEntity[key] = value;
+      if (value !== undefined && key !== 'categories' && existsPost[key] !== value) {
+        existsPost[key] = value;
         hasChanges = true;
       }
     }
 
     if (!hasChanges) {
-      return existsPostEntity;
+      return existsPost;
     }
 
-    return this.postRepository.update(id, existsPostEntity);
+    return this.postRepository.update(id, existsPost);
   }
 
-  public async repost(id: string, userId: string) {
-    const originalPost = await this.postRepository.findById(id);
-    const originalPostEntity = new PostTypeEntity[originalPost.type](originalPost);
+  public async repost(id: string, userId: string): Promise<PostContentEntity> {
+    const originalPostEntity = await this.postRepository.findById(id);
 
     if (originalPostEntity.isRepost) {
       throw new BadRequestException(PostsError.AlreadyReposted)
@@ -81,8 +79,8 @@ export class PostService {
 
     originalPostEntity.userId = userId;
     originalPostEntity.isRepost = true;
-    originalPostEntity.originalPostId = originalPost.id;
-    originalPostEntity.originalUserId = originalPost.userId;
+    originalPostEntity.originalPostId = originalPostEntity.id;
+    originalPostEntity.originalUserId = originalPostEntity.userId;
 
     await this.postRepository.save(originalPostEntity);
 
@@ -90,14 +88,14 @@ export class PostService {
   }
 
   async getUnpublishedPosts(userId: string): Promise<PostContentEntity[]> {
-    const posts = await this.postRepository.findUnpublishedPosts(userId);
-
-    return posts.map((post) => new PostTypeEntity[post.type](post));
+    return await this.postRepository.findUnpublishedPosts(userId);
   }
 
   async getPostsBySearch(search: SearchQuery): Promise<PostContentEntity[]> {
-    const posts = await this.postRepository.search(search);
+    return await this.postRepository.search(search);
+  }
 
-    return posts.map((post) => new PostTypeEntity[post.type](post));
+  public async getPosts(): Promise<PostContentEntity[]> {
+    return await this.postRepository.getFullList();
   }
 }

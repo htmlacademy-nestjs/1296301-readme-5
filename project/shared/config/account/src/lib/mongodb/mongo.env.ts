@@ -33,7 +33,7 @@ export class MongoConfiguration {
         validationError: { target: false, value: true },
       });
     } catch (errors) {
-      console.error('[DB Config Validation Error]:', errors);
+      console.error('[Account Mongo DB Config Validation Error]:', errors);
 
       throw errors;
     }

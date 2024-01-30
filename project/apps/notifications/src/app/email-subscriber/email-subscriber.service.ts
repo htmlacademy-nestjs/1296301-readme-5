@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { Injectable } from '@nestjs/common';
 
 import { EmailSubscriberEntity } from './email-subscriber.entity';
@@ -19,7 +20,17 @@ export class EmailSubscriberService {
     }
 
     return this.emailSubscriberRepository
-      .save(new EmailSubscriberEntity().populate(subscriber))
+      .save(new EmailSubscriberEntity().populate({ ...subscriber, dateNotify: dayjs().toISOString() }));
+  }
 
+  public async getSubscriber(email: string) {
+    return await this.emailSubscriberRepository.findByEmail(email);
+  }
+
+  public async updateDateSent(subscriber: EmailSubscriberEntity) {
+    const subscriberDto = { ...subscriber, dateNotify: dayjs().toISOString() };
+    const updatedSubscriber = new EmailSubscriberEntity().populate(subscriberDto);
+
+    return await this.emailSubscriberRepository.update(subscriber.id, updatedSubscriber);
   }
 }

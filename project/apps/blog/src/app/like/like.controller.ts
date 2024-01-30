@@ -1,11 +1,13 @@
-import { Controller, HttpStatus, Param, Post, Get, Delete } from "@nestjs/common";
+import { Controller, HttpStatus, Param, Post, Get, Delete, Req, UseGuards } from "@nestjs/common";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
+import { RequestWithTokenPayload } from '@project/shared/app/types';
 
 import { LikesMessage } from './constants/like.constants';
 import { LikeService } from './like.service';
 import { LikeRdo } from './rdo/like.rdo';
+import { CheckAuthGuard } from '../guards/check-auth.guard';
 
 @ApiTags('likes')
 @Controller('likes')
@@ -18,9 +20,10 @@ export class LikeController {
     status: HttpStatus.OK,
     description: LikesMessage.Add
   })
+  @UseGuards(CheckAuthGuard)
   @Post(':postId')
-  public async createLike(@Param('postId') postId: string ) {
-    const newLike = await this.likeService.create(postId, 'userId');
+  public async createLike(@Param('postId') postId: string, @Req() { user }: RequestWithTokenPayload) {
+    const newLike = await this.likeService.create(postId, user.sub);
 
     return fillDto(LikeRdo, newLike.toPOJO());
   }
@@ -29,15 +32,17 @@ export class LikeController {
     status: HttpStatus.NO_CONTENT,
     description: LikesMessage.Delete
   })
+  @UseGuards(CheckAuthGuard)
   @Delete(':postId')
-  public async destroy(@Param('postId') postId: string ) {
-    await this.likeService.deleteLike(postId, 'userId');
+  public async destroy(@Param('postId') postId: string, @Req() { user }: RequestWithTokenPayload) {
+    await this.likeService.deleteLike(postId, user.sub);
   }
 
   @ApiResponse({
     status: HttpStatus.OK,
     description: LikesMessage.Show
   })
+  @UseGuards(CheckAuthGuard)
   @Get(':postId')
   public async getLikes(@Param('postId') postId: string) {
     const likes = await this.likeService.findByPostId(postId);

@@ -20,6 +20,8 @@ export class EmailSubscriberModel extends Document implements Subscriber {
   })
   public userName: string;
 
+  public dateNotify?: string;
+
   public id?: string;
 }
 

@@ -9,6 +9,12 @@ export class JWTConfig {
   @IsString({ message: EnvValidationMessage.AccessTokenExpiresInRequired })
   public accessTokenExpiresIn: string;
 
+  @IsString({ message: EnvValidationMessage.RefreshTokenSecretRequired })
+  public refreshTokenSecret: string;
+
+  @IsString({ message: EnvValidationMessage.RefreshTokenExpiresInRequired })
+  public refreshTokenExpiresIn: string;
+
   public async validate(): Promise<void> {
     try {
       await validateOrReject(this, {

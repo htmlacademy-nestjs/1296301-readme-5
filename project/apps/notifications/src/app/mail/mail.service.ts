@@ -1,11 +1,11 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 
-import { Subscriber } from '@project/shared/app/types';
+import { Subscriber, PostContentType } from '@project/shared/app/types';
 import { ConfigType } from '@nestjs/config';
 import { notificationsConfig } from '@project/shared/config/notifications';
 
-import { EMAIL_ADD_SUBSCRIBER_SUBJECT } from './mail.constant';
+import { EMAIL_ADD_SUBSCRIBER_SUBJECT, EMAIL_ADD_NEWSLETTER_SUBJECT } from './mail.constant';
 
 @Injectable()
 export class MailService {
@@ -25,6 +25,18 @@ export class MailService {
       context: {
         user: `${subscriber.userName}`,
         email: `${subscriber.email}`,
+      }
+    })
+  }
+
+  public async sendNotifications(email: string, postsInfo: PostContentType[]) {
+    await this.mailerService.sendMail({
+      from: this.serviceConfig.mail.from,
+      to: email,
+      subject: EMAIL_ADD_NEWSLETTER_SUBJECT,
+      template: './newsletter',
+      context: {
+        posts: postsInfo
       }
     })
   }
