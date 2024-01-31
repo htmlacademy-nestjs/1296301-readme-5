@@ -1,7 +1,20 @@
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
-import { Get, Body, Controller, Param, Post, Delete, Patch, Query, Req, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Get,
+  Body,
+  Controller,
+  Param,
+  Post,
+  Delete,
+  Patch,
+  Query,
+  Req,
+  UseGuards,
+  HttpStatus,
+  UseInterceptors
+} from '@nestjs/common';
 
-import { fillDto } from '@project/shared/helpers';
+import { fillDto, CheckAuthGuard } from '@project/shared/helpers';
 import { RequestWithTokenPayload } from '@project/shared/app/types';
 import { CreatePostDto, UpdatePostDto, PostQuery, SearchQuery } from '@project/shared/blog/dto';
 
@@ -11,10 +24,11 @@ import { PostInfo, PostsError } from './constants/post.constant';
 import { CreatePostValidationPipe } from './pipes/create-post-validation.pipe';
 import { UpdatePostValidationPipe } from './pipes/update-post-validation.pipe';
 
-import { CheckAuthGuard } from './guards/check-auth.guard';
 import { PostTypeRdo } from './rdo/post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { NotificationsService } from '../notifications/notifications.service';
+import { BasePostRdo } from './rdo/base-post.rdo';
+import { UseridInterceptor } from './interseptors/user-id.interceptor';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -26,9 +40,58 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
+    description: PostInfo.ShowUserPostCount,
+  })
+  @Get('/user-posts-count/:id')
+  public async getUserPosts(@Param('id') id: string) {
+    return await this.postService.getUserPostsCount(id);
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostInfo.Search,
+  })
+  @Get('/search')
+  async search(@Query() query: SearchQuery) {
+    const posts = await this.postService.getPostsBySearch(query);
+
+    return posts.map((post) => fillDto(PostTypeRdo[post.type], post.toPOJO()));
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostInfo.ShowAllUserDrafts,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: PostsError.EmptyList,
+  })
+  @UseGuards(CheckAuthGuard)
+  @Get('/drafts')
+  async showDrafts(@Req() { user }: RequestWithTokenPayload) {
+    const posts = await this.postService.getUnpublishedPosts(user.sub);
+
+    return posts.map((post) => fillDto(PostTypeRdo[post.type], post.toPOJO()));
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: PostInfo.SendNews
+  })
+  @UseGuards(CheckAuthGuard)
+  @Get('/news')
+  public async sendNews(@Req() { user }: RequestWithTokenPayload) {
+    const { email, sub } = user;
+    const posts = await this.postService.getPosts();
+
+    await this.notificationsService.sendNews({ email, posts, id: sub });
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
     description: PostInfo.Show,
   })
-  @Get(':id')
+  @Get('/:id')
   public async show(@Param('id') id: string) {
     const post = await this.postService.getPost(id);
 
@@ -52,53 +115,6 @@ export class PostController {
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: PostInfo.ShowUserPostCount,
-  })
-  @Get('user-posts-count/:id')
-  public async getUserPosts(@Param('id') id: string) {
-    return await this.postService.getUserPostsCount(id);
-  }
-
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: PostInfo.Search,
-  })
-  @Get('search')
-  async search(@Query() query: SearchQuery) {
-    const posts = await this.postService.getPostsBySearch(query);
-
-    return posts.map((post) => fillDto(PostTypeRdo[post.type], post.toPOJO));
-  }
-
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: PostInfo.ShowAllUserDrafts,
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: PostsError.EmptyList,
-  })
-  @UseGuards(CheckAuthGuard)
-  @Get('drafts')
-  async showDrafts(@Req() { user }: RequestWithTokenPayload) {
-    const posts = await this.postService.getUnpublishedPosts(user.sub);
-
-    return posts.map((post) => fillDto(PostTypeRdo[post.type], post.toPOJO));
-  }
-
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: PostInfo.Add,
-  })
-  @Post('add')
-  public async create(@Body(CreatePostValidationPipe) dto: CreatePostDto) {
-    const post = await this.postService.createPost(dto);
-
-    return fillDto(PostTypeRdo[post.type], post.toPOJO());
-  }
-
-  @ApiResponse({
-    status: HttpStatus.OK,
     description: PostInfo.Repost,
   })
   @UseGuards(CheckAuthGuard)
@@ -113,7 +129,21 @@ export class PostController {
   }
 
   @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: PostInfo.Add,
+  })
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(UseridInterceptor)
+  @Post('add')
+  public async create(@Body(CreatePostValidationPipe) dto: CreatePostDto) {
+    const post = await this.postService.createPost(dto);
+
+    return fillDto(PostTypeRdo[post.type], post.toPOJO());
+  }
+
+  @ApiResponse({
     status: HttpStatus.OK,
+    type: BasePostRdo,
     description: PostInfo.Update,
   })
   @UseGuards(CheckAuthGuard)
@@ -143,18 +173,5 @@ export class PostController {
     @Param('id') id: string,
   ) {
     return await this.postService.deletePost(id, user.sub);
-  }
-
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: PostInfo.SendNews
-  })
-  @UseGuards(CheckAuthGuard)
-  @Get('news')
-  public async sendNews(@Req() { user }: RequestWithTokenPayload) {
-    const { email, sub } = user;
-    const posts = await this.postService.getPosts();
-
-    await this.notificationsService.sendNews({ email, posts, id: sub });
   }
 }

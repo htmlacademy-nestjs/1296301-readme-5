@@ -1,0 +1,29 @@
+# Login user by email and password
+POST http://localhost:3000/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@test.local",
+  "password": "123456"
+}
+
+###
+
+# Add like
+POST http://localhost:3001/api/likes/55555c0-030b-30b5-58170cbb-09c4b306i HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTgyNTMsImV4cCI6MTcwNjcxODg1M30.1JPyNgqdxzis867-FjCq7howTTRzMXqiqsSQ5Lkuff0
+
+###
+
+# Remove like
+DELETE http://localhost:3001/api/likes/55555c0-030b-30b5-58170cbb-09c4b306i HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTgyNTMsImV4cCI6MTcwNjcxODg1M30.1JPyNgqdxzis867-FjCq7howTTRzMXqiqsSQ5Lkuff0
+
+###
+
+# Show likes
+GET   http://localhost:3001/api/likes/d82e-99da-593b-ab044fe3-ef0db4b2e068 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTgyNTMsImV4cCI6MTcwNjcxODg1M30.1JPyNgqdxzis867-FjCq7howTTRzMXqiqsSQ5Lkuff0

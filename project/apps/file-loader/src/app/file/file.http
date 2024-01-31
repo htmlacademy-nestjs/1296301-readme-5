@@ -1,0 +1,29 @@
+# Upload avatar
+POST http://localhost:3002/api/files/upload/avatar HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="impressive-tom.jpeg"
+Content-Type: image/jpeg
+
+< ../../../assets/impressive-tom.jpeg
+--boundary--
+
+###
+# Upload photo
+POST http://localhost:3002/api/files/upload/photo HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="photo"; filename="god.png"
+Content-Type: image/png
+
+< ../../../assets/god.png
+--boundary--
+
+###
+
+# Get file by ID
+GET http://localhost:3002/api/files/ HTTP/1.1
+
+###	###

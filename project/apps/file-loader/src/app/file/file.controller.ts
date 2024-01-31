@@ -33,6 +33,7 @@ export class FileController {
   @UseInterceptors(FileInterceptor('avatar') as any)
   @Post('upload/avatar')
   public async uploadAvatar(@UploadedFile(FileValidationPipe) file: Express.Multer.File) {
+    console.log(file)
     const fileEntity = await this.fileService.saveFile(file);
 
     return fillDto(UploadedFileRdo, fileEntity.toPOJO());

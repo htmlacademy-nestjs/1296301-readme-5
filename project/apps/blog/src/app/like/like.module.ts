@@ -4,8 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import { PrismaClientModule } from '@project/shared/blog/models';
-import { getJwtOptions, JwtAccessStrategy } from '@project/shared/helpers';
-import { CheckAuthGuard } from '../guards/check-auth.guard';
+import { getJwtOptions, JwtAccessStrategy, CheckAuthGuard } from '@project/shared/helpers';
 
 import { LikeController } from './like.controller';
 import { LikeService } from './like.service';

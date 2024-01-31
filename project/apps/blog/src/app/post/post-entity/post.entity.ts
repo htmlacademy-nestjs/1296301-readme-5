@@ -18,11 +18,7 @@ export abstract class PostEntity implements Post, Entity<string, Post> {
   public messages: Message[];
   public likes: Like[];
 
-  protected constructor(post: Post) {
-    this.populate(post);
-  }
-
-  public populate(data: Post): PostEntity {
+  protected constructor(data: Post) {
     this.id = data.id ?? undefined;
     this.userId = data.userId ?? undefined;
     this.originalUserId = data.originalUserId ?? undefined;
@@ -37,8 +33,6 @@ export abstract class PostEntity implements Post, Entity<string, Post> {
     this.tags = data.tags ?? [];
     this.messages = data.messages ?? [];
     this.likes = data.likes ?? [];
-
-    return this;
   }
 
   public toPOJO(): Post {
@@ -55,8 +49,8 @@ export abstract class PostEntity implements Post, Entity<string, Post> {
       likesCount: this.likesCount,
       messagesCount: this.messagesCount,
       tags: this.tags,
-      messages: [],
-      likes: [],
+      messages: this.messages,
+      likes: this.likes,
     };
   }
 }

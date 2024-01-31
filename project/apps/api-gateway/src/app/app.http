@@ -1,0 +1,175 @@
+# Create a new user
+POST http://localhost:4000/api/users/registration HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "tet@tet.local",
+  "userName": "Test Doe",
+  "password": "123456"
+}
+
+###
+
+# Login user by email and password
+POST http://localhost:4000/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "tet@tet.local",
+  "password": "1234567"
+}
+
+###
+
+# Get user by ID
+GET http://localhost:4000/api/users/65ba5ac31adbe1ca4f089cd6 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhOTJiNWJjZTQxMGQ1Mjc4NTA4MzIiLCJlbWFpbCI6InRldEB0ZXQubG9jYWwiLCJ1c2VyTmFtZSI6IlRlc3QgRG9lIiwiYXZhdGFyIjoiIiwiaWF0IjoxNzA2NzI2MDc1LCJleHAiOjE3MDY3Mjk2NzV9.I4q7yzAtvl_Tp6oW1FhMksHzgZk8BPwShnE9fkb_qyE
+Content-Type: application/json
+
+###
+
+# Change user password
+POST http://localhost:4000/api/users/change-password/65ba92b5bce410d527850832 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhOTJiNWJjZTQxMGQ1Mjc4NTA4MzIiLCJlbWFpbCI6InRldEB0ZXQubG9jYWwiLCJ1c2VyTmFtZSI6IlRlc3QgRG9lIiwiYXZhdGFyIjoiIiwiaWF0IjoxNzA2NzI2MDc1LCJleHAiOjE3MDY3Mjk2NzV9.I4q7yzAtvl_Tp6oW1FhMksHzgZk8BPwShnE9fkb_qyE
+Content-Type: application/json
+
+{
+  "password": "123456",
+  "newPassword": "1234567"
+}
+###
+
+# Get new JWT pair
+POST http://localhost:4000/api/users/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhOTJiNWJjZTQxMGQ1Mjc4NTA4MzIiLCJlbWFpbCI6InRldEB0ZXQubG9jYWwiLCJ1c2VyTmFtZSI6IlRlc3QgRG9lIiwiYXZhdGFyIjoiIiwidG9rZW5JZCI6IjkzZjhiM2Y4LTUzZGUtNDhhYi1hOGZlLWE1N2EzMTU1N2JjYiIsImlhdCI6MTcwNjcyNjA3NSwiZXhwIjoxNzA5MzE4MDc1fQ.gB59Jm65LwNMhbgFyBjDHaQ0VGsCDtiKS0NUi2U5W7E
+Content-Type: application/json
+
+###
+
+# Create a new post
+POST http://localhost:4000/api/blog/add HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhOTJiNWJjZTQxMGQ1Mjc4NTA4MzIiLCJlbWFpbCI6InRldEB0ZXQubG9jYWwiLCJ1c2VyTmFtZSI6IlRlc3QgRG9lIiwiYXZhdGFyIjoiIiwiaWF0IjoxNzA2NzI3MDkwLCJleHAiOjE3MDY3MzA2OTB9.aaA6RThN3xNA7RJlhvBuZMQ2M1gT1YvJvlh_TkKn_Ik
+
+{
+  "type": "text",
+  "title": "Long title for text publication",
+  "announcement": "Consectetur adipiscing elit. Dictum ac cursus at, faucibus ut sapien. Duis ac. Lorem ipsum dolor sit amet. Duis ac. Lorem ipsum dolor sit amet",
+  "description": "Duis erat sem, dictum ac cursus at, faucibus ut sapien. Duis ac. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "tags": ["travel", "techno"]
+}
+
+###
+
+# Get post by ID
+GET http://localhost:4000/api/blog/post/93b3382d-d1c4-474e-b472-86890a1b80fa HTTP/1.1
+
+###
+# Get all posts
+GET http://localhost:4000/api/blog/posts/?limit=25&page=1&tag=travel HTTP/1.1
+
+###
+
+# Get all posts by name
+GET http://localhost:4000/api/blog/search/?title=Летняя%20вечеринка HTTP/1.1
+
+###
+
+# Get drafts
+GET http://localhost:4000/api/blog/drafts  HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhOTJiNWJjZTQxMGQ1Mjc4NTA4MzIiLCJlbWFpbCI6InRldEB0ZXQubG9jYWwiLCJ1c2VyTmFtZSI6IlRlc3QgRG9lIiwiYXZhdGFyIjoiIiwiaWF0IjoxNzA2NzI3MDkwLCJleHAiOjE3MDY3MzA2OTB9.aaA6RThN3xNA7RJlhvBuZMQ2M1gT1YvJvlh_TkKn_Ik
+Content-Type: application/json
+
+###
+
+# Send news
+GET http://localhost:4000/api/blog/send-news HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhOTJiNWJjZTQxMGQ1Mjc4NTA4MzIiLCJlbWFpbCI6InRldEB0ZXQubG9jYWwiLCJ1c2VyTmFtZSI6IlRlc3QgRG9lIiwiYXZhdGFyIjoiIiwiaWF0IjoxNzA2NzI3MDkwLCJleHAiOjE3MDY3MzA2OTB9.aaA6RThN3xNA7RJlhvBuZMQ2M1gT1YvJvlh_TkKn_Ik
+Content-Type: application/json
+
+###
+
+# Repost
+POST  http://localhost:4000/api/blog/repost/62309c0-030b-30b5-58170cbb-09c4b303e HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhOTJiNWJjZTQxMGQ1Mjc4NTA4MzIiLCJlbWFpbCI6InRldEB0ZXQubG9jYWwiLCJ1c2VyTmFtZSI6IlRlc3QgRG9lIiwiYXZhdGFyIjoiIiwiaWF0IjoxNzA2NzI3MDkwLCJleHAiOjE3MDY3MzA2OTB9.aaA6RThN3xNA7RJlhvBuZMQ2M1gT1YvJvlh_TkKn_Ik
+
+###
+
+# Update post
+PATCH http://localhost:4000/api/blog/post/54a9a89e-6499-43df-b853-dd4abfaf43cc HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MjgwNjksImV4cCI6MTcwNjczMTY2OX0.aDFy510MYdEb8kmTysb1gGqkeloHv24Z3ihp8AaA2Ow
+
+{
+  "type": "text",
+  "title": "Летняя вечеринка под дождем и ветром",
+  "announcement": "Уже сегодня под проливным дождем и ветром начнется вечеринка года!"
+}
+
+###
+
+# Delete post by ID
+DELETE http://localhost:4000/api/blog/post/54a9a89e-6499-43df-b853-dd4abfaf43cc HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MjgwNjksImV4cCI6MTcwNjczMTY2OX0.aDFy510MYdEb8kmTysb1gGqkeloHv24Z3ihp8AaA2Ow
+
+###
+
+# Send message
+POST http://localhost:4000/api/messages/add HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3Mjg5MTUsImV4cCI6MTcwNjczMjUxNX0.J_dlpC6HG7glT910u2xLf-W5oV6iO35p8NFTibDpElY
+
+{
+  "postId": "55555c0-030b-30b5-58170cbb-09c4b306i",
+  "message": "Comment text for post publication"
+}
+
+###
+# Get messages
+GET http://localhost:4000/api/messages/?limit=2&postId=55555c0-030b-30b5-58170cbb-09c4b306i HTTP/1.1
+Content-Type: application/json
+
+###
+# Get message
+GET http://localhost:4000/api/messages/f044135e-acf0-474f-942f-bb03145d01c3 HTTP/1.1
+Content-Type: application/json
+
+###
+# Change message
+PATCH http://localhost:4000/api/messages/76d1c615-dc4b-43a6-8d82-535e0666041d HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3Mjg5MTUsImV4cCI6MTcwNjczMjUxNX0.J_dlpC6HG7glT910u2xLf-W5oV6iO35p8NFTibDpElY
+
+{
+  "message": "Just test comment and other and other!"
+}
+
+###
+
+# Delete message
+DELETE  http://localhost:4000/api/messages/bf64ab15-12b1-4962-aba5-b5ab0c1a1bad HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3Mjg5MTUsImV4cCI6MTcwNjczMjUxNX0.J_dlpC6HG7glT910u2xLf-W5oV6iO35p8NFTibDpElY
+
+###
+
+# Add like
+POST http://localhost:4000/api/blog/likes/93b3382d-d1c4-474e-b472-86890a1b80fa HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3Mjg5MTUsImV4cCI6MTcwNjczMjUxNX0.J_dlpC6HG7glT910u2xLf-W5oV6iO35p8NFTibDpElY
+
+###
+
+# Get likes
+GET http://localhost:4000/api/blog/likes/93b3382d-d1c4-474e-b472-86890a1b80fa HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3Mjg5MTUsImV4cCI6MTcwNjczMjUxNX0.J_dlpC6HG7glT910u2xLf-W5oV6iO35p8NFTibDpElY
+
+###
+
+# Remove like
+DELETE http://localhost:4000/api/blog/likes/93b3382d-d1c4-474e-b472-86890a1b80fa HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3Mjg5MTUsImV4cCI6MTcwNjczMjUxNX0.J_dlpC6HG7glT910u2xLf-W5oV6iO35p8NFTibDpElY
+
+###

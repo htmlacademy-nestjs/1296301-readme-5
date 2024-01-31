@@ -11,7 +11,8 @@ export interface FileLoaderConfig {
   environment: string;
   port: number;
   uploadDirectory: string;
-  db: {
+  serveRoot: string;
+    db: {
     host: string;
     port: number;
     user: string;
@@ -25,6 +26,7 @@ const validationSchema = Joi.object({
   environment: Joi.string().valid(...ENVIRONMENTS).required(),
   port: Joi.number().port().default(DEFAULT_PORT),
   uploadDirectory: Joi.string().required(),
+  serveRoot: Joi.string().required(),
   db: Joi.object({
     host: Joi.string().valid().hostname(),
     port: Joi.number().port(),
@@ -48,6 +50,7 @@ function getConfig(): FileLoaderConfig {
     environment: process.env.NODE_ENV as Environment,
     port: parseInt(process.env.PORT || `${DEFAULT_PORT}`, 10),
     uploadDirectory: process.env.UPLOAD_DIRECTORY_PATH,
+    serveRoot: process.env.SERVE_ROOT,
     db: {
       host: process.env.MONGO_HOST,
       port: parseInt(process.env.MONGO_PORT ?? DEFAULT_MONGO_PORT.toString(), 10),

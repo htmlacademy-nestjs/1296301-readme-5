@@ -28,7 +28,8 @@ export class SearchQuery {
     description: 'Title',
     example: 'title',
   })
+  @IsOptional()
   @IsString()
   @Transform(({ value }) => decodeURIComponent(value))
-  public title?: string = '';
+  public title?: string;
 }

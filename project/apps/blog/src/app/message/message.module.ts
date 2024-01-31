@@ -4,8 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 
 import { PrismaClientModule } from '@project/shared/blog/models';
-import { JwtAccessStrategy, getJwtOptions } from '@project/shared/helpers';
-import { CheckAuthGuard } from '../guards/check-auth.guard';
+import { JwtAccessStrategy, getJwtOptions, CheckAuthGuard } from '@project/shared/helpers';
 
 import { MessageController } from './message.controller';
 import { MessageService } from './message.service';

@@ -34,7 +34,7 @@ export class MailService {
       from: this.serviceConfig.mail.from,
       to: email,
       subject: EMAIL_ADD_NEWSLETTER_SUBJECT,
-      template: './newsletter',
+      template: './news',
       context: {
         posts: postsInfo
       }

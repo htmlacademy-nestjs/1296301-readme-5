@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { Message } from '@project/shared/app/types';
+import { Message, Like } from '@project/shared/app/types';
 
 export class BasePostRdo {
   @ApiProperty({
@@ -70,14 +70,14 @@ export class BasePostRdo {
     example: 0,
   })
   @Expose()
-  public likesCount: number;
+  public likesCount?: number;
 
   @ApiProperty({
     description: 'Total amount of messages',
     example: 0,
   })
   @Expose()
-  public messagesCount: number;
+  public messagesCount?: number;
 
   @ApiProperty({
     description: 'Total amount of messages',
@@ -85,6 +85,13 @@ export class BasePostRdo {
   })
   @Expose()
   public messages: Message[];
+
+  @ApiProperty({
+    description: 'Total amount of likes',
+    example: '0',
+  })
+  @Expose()
+  public likes: Like[];
 
   @ApiProperty({
     description: 'Tag list',
