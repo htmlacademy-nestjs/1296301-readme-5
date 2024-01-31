@@ -1,0 +1,53 @@
+# Login user by email and password
+
+POST http://localhost:3000/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@test.local",
+  "password": "1234567"
+}
+
+###
+
+# Send message
+POST http://localhost:3001/api/messages/add HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTgyNTMsImV4cCI6MTcwNjcxODg1M30.1JPyNgqdxzis867-FjCq7howTTRzMXqiqsSQ5Lkuff0
+
+{
+  "postId": "55555c0-030b-30b5-58170cbb-09c4b306i",
+  "message": "Comment text for publication"
+}
+
+###
+
+# Get message
+GET http://localhost:3001/api/messages/76efe623-511f-460a-a098-5e76694cf9f9 HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Get messages
+GET http://localhost:3001/api/messages/?limit=2&postId=55555c0-030b-30b5-58170cbb-09c4b306i HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Delete message
+DELETE  http://localhost:3001/api/messages/66h6da50-c788-45dc-9fff-543d34ad0a66 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTgyNTMsImV4cCI6MTcwNjcxODg1M30.1JPyNgqdxzis867-FjCq7howTTRzMXqiqsSQ5Lkuff0
+
+
+###
+# Change message
+PATCH  http://localhost:3001/api/messages/bf64ab15-12b1-4962-aba5-b5ab0c1a1bad HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTgyNTMsImV4cCI6MTcwNjcxODg1M30.1JPyNgqdxzis867-FjCq7howTTRzMXqiqsSQ5Lkuff0
+
+{
+  "message": "Just test comment!"
+}
+
+###

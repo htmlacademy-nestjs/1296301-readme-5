@@ -1,7 +1,21 @@
 import { HttpService } from '@nestjs/axios';
-import { Body, Req, Get, Param, Controller, Post, Patch, Query, UseFilters, Delete, HttpStatus } from '@nestjs/common';
+import {
+  Body,
+  Req,
+  Get,
+  Param,
+  Controller,
+  Post,
+  Patch,
+  Query,
+  UseFilters,
+  Delete,
+  HttpStatus,
+  UseGuards
+} from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+import { CheckAuthGuard } from '@project/shared/helpers';
 import { CreateMessageDto, UpdateMessageDto, MessageQuery } from '@project/shared/blog/dto';
 
 import { MessagesInfo } from './app.constants';
@@ -11,7 +25,7 @@ import { ApplicationServiceURL } from './app.config';
 @ApiTags('messages')
 @Controller('messages')
 @UseFilters(AxiosExceptionFilter)
-export class CommentsController {
+export class MessagesController {
   constructor(
     private readonly httpService: HttpService
   ) {}
@@ -20,9 +34,10 @@ export class CommentsController {
     status: HttpStatus.CREATED,
     description: MessagesInfo.Add,
   })
-  @Post('add')
+  @UseGuards(CheckAuthGuard)
+  @Post('/add')
   public async createMessage(@Body() dto: CreateMessageDto, @Req() req: Request) {
-    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Messages}/`, dto,{
+    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Messages}/add`, dto,{
       headers: {
         'Authorization': req.headers['authorization'],
       },
@@ -67,13 +82,16 @@ export class CommentsController {
     status: HttpStatus.CREATED,
     description: MessagesInfo.Update,
   })
+  @UseGuards(CheckAuthGuard)
   @Patch(':id')
   public async update(@Param('id') id: string, @Req() req: Request, @Body() dto: UpdateMessageDto) {
-    await this.httpService.axiosRef.patch(`${ApplicationServiceURL.Messages}/${id}`, dto, {
+    const { data } = await this.httpService.axiosRef.patch(`${ApplicationServiceURL.Messages}/${id}`, dto, {
       headers: {
         'Authorization': req.headers['authorization'],
       },
     });
+
+    return data;
   }
 
   @ApiResponse({

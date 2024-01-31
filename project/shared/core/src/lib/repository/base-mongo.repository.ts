@@ -29,9 +29,11 @@ export abstract class BaseMongoRepository<
 
   public async save(entity: EntityType): Promise<EntityType> {
     const newEntity = new this.model(entity.toPOJO());
+
     await newEntity.save();
 
     entity.id = newEntity._id.toString();
+
     return entity;
   }
 

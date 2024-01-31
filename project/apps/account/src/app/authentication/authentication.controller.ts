@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Body, Req, Param, UseGuards, HttpStatus, HttpCode, } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { fillDto } from '@project/shared/helpers';
+import { fillDto, CheckAuthGuard } from '@project/shared/helpers';
 import { RequestWithTokenPayload } from '@project/shared/app/types';
 import { ChangePasswordUserDto, CreateUserDto } from '@project/shared/blog/dto';
 
@@ -30,19 +30,6 @@ export class AuthenticationController {
   ) {}
 
   @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: UserInfo.Register,
-  })
-  @Post('register')
-  public async create(@Body() dto: CreateUserDto) {
-    const newUser = await this.authService.register(dto);
-    const { email, userName } = newUser;
-    await this.notificationsService.registerSubscriber({ email, userName });
-
-    return fillDto(UserRdo, newUser.toPOJO());
-  }
-
-  @ApiResponse({
     type: LoggedUserRdo,
     status: HttpStatus.OK,
     description: UserInfo.Login,
@@ -52,7 +39,7 @@ export class AuthenticationController {
     description: UserInfo.WrongPassword,
   })
   @UseGuards(LocalAuthGuard)
-  @Post('login')
+  @Post('/login')
   public async login(@Req() { user }: RequestWithUser) {
     const userToken = await this.authService.createUserToken(user);
 
@@ -60,13 +47,27 @@ export class AuthenticationController {
   }
 
   @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: UserInfo.Register,
+  })
+  @Post('/register')
+  public async create(@Body() dto: CreateUserDto) {
+    const newUser = await this.authService.register(dto);
+    const { email, userName } = newUser;
+    await this.notificationsService.registerSubscriber({ email, userName });
+
+    return fillDto(UserRdo, newUser.toPOJO());
+  }
+
+  @ApiResponse({
     type: UserRdo,
     status: HttpStatus.OK,
     description: UserInfo.UpdatePassword,
   })
-  @Post('update-password')
-  public async updatePassword(@Body() dto: ChangePasswordUserDto) {
-    const updatedUser = await this.authService.changePassword(dto);
+  @UseGuards(CheckAuthGuard)
+  @Post('/update-password/:userId')
+  public async updatePassword(@Param('userId') userId: string, @Body() dto: ChangePasswordUserDto) {
+    const updatedUser = await this.authService.changePassword(dto, userId);
 
     return fillDto(UserRdo, updatedUser.toPOJO());
   }
@@ -77,7 +78,7 @@ export class AuthenticationController {
     description: UserInfo.FoundUser,
   })
   @Get(':id')
-  public async show(@Param('id') id: string ) {
+  public async show(@Param('id') id: string) {
     const existUser = await this.authService.getUser(id);
 
     return fillDto(UserRdo, existUser.toPOJO());

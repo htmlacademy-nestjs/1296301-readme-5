@@ -47,7 +47,7 @@ export class PostQuery {
   @IsOptional()
   @MinLength(TagDefaultParam.MinLength)
   @MaxLength(TagDefaultParam.MaxLength)
-  public tag?: string = '';
+  public tag?: string;
 
   @ApiProperty({
     description: 'Sort direction',

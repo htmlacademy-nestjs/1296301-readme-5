@@ -28,6 +28,7 @@ export class BlogUserEntity implements AuthUser, Entity<string> {
       registrationDate: this.registrationDate,
       publicationsCount: this.publicationsCount,
       subscribersCount: this.subscribersCount,
+      passwordHash: this.passwordHash,
     };
   }
 

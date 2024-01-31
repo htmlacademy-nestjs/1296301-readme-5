@@ -1,7 +1,7 @@
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Controller, Get, Param, Post, Delete, Patch, Query, Body, Req, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 
-import { fillDto } from '@project/shared/helpers';
+import { fillDto, CheckAuthGuard } from '@project/shared/helpers';
 import { RequestWithTokenPayload } from '@project/shared/app/types';
 import { CreateMessageDto, UpdateMessageDto, MessageQuery } from '@project/shared/blog/dto';
 
@@ -12,7 +12,6 @@ import { CreateMessageValidationPipe } from './pipes/create-message-validation.p
 import { UpdateMessageValidationPipe } from './pipes/update-message-validation.pipe';
 
 import { MessageRdo } from './rdo/message.rdo';
-import { CheckAuthGuard } from '../guards/check-auth.guard';
 
 @ApiTags('messages')
 @Controller('messages')
@@ -40,9 +39,9 @@ export class MessageController {
   })
   @Get('/')
   async index(@Query() query: MessageQuery) {
-    const comments = await this.messageService.getMessages(query);
+    const messages = await this.messageService.getMessages(query);
 
-    return fillDto(MessageRdo, comments.map((comment) => comment.toPOJO()));
+    return fillDto(MessageRdo, messages.map((message) => message.toPOJO()));
   }
 
   @ApiResponse({
@@ -51,7 +50,7 @@ export class MessageController {
     description: MessageInfo.Add,
   })
   @UseGuards(CheckAuthGuard)
-  @Post('/')
+  @Post('/add')
   async create(@Req() { user }: RequestWithTokenPayload, @Body(CreateMessageValidationPipe) dto: CreateMessageDto) {
     const newComment = await this.messageService.createMessage(dto, user.sub);
 
@@ -77,8 +76,8 @@ export class MessageController {
   @UseGuards(CheckAuthGuard)
   @Patch(':id')
   async update(@Req() { user }: RequestWithTokenPayload, @Param('id') id: string, @Body(UpdateMessageValidationPipe) dto: UpdateMessageDto) {
-    const updatedComment = await this.messageService.updateMessage(id, dto, user.sub);
+    const updatedMessage = await this.messageService.updateMessage(id, dto, user.sub);
 
-    return fillDto(MessageRdo, updatedComment.toPOJO());
+    return fillDto(MessageRdo, updatedMessage.toPOJO());
   }
 }

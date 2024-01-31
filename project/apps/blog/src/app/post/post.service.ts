@@ -16,7 +16,7 @@ export class PostService {
     private readonly postRepository: PostRepository,
   ) {}
 
-  public async createPost(dto: CreatePostDto): Promise<PostContentEntity> {
+  public async createPost(dto: CreatePostDto, ): Promise<PostContentEntity> {
     const postType = dto.type;
     const newPost = new PostTypeEntity[postType](dto);
 
@@ -57,7 +57,7 @@ export class PostService {
     let hasChanges = false;
 
     for (const [key, value] of Object.entries(dto)) {
-      if (value !== undefined && key !== 'categories' && existsPost[key] !== value) {
+      if (value !== undefined && existsPost[key] !== value) {
         existsPost[key] = value;
         hasChanges = true;
       }
@@ -81,6 +81,8 @@ export class PostService {
     originalPostEntity.isRepost = true;
     originalPostEntity.originalPostId = originalPostEntity.id;
     originalPostEntity.originalUserId = originalPostEntity.userId;
+
+    delete originalPostEntity.id;
 
     await this.postRepository.save(originalPostEntity);
 

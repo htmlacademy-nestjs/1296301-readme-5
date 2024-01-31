@@ -20,12 +20,11 @@ import {
 
 import { CreateUserDto, LoginUserDto, ChangePasswordUserDto } from '@project/shared/blog/dto';
 import { MongoIdValidationPipe } from '@project/shared/core';
+import { CheckAuthGuard } from '@project/shared/helpers';
 
 import { UserInfo } from './app.constants';
-import { CheckAuthGuard } from './guards/check-auth.guard';
 import { ApplicationServiceURL } from './app.config';
 import { AxiosExceptionFilter } from './filters/axios-exeption.filter';
-import { UseridInterceptor } from './interseptors/user-id.interceptor';
 
 @ApiTags('users')
 @Controller('users')
@@ -85,8 +84,8 @@ export class UsersController {
   public async refreshToken(@Req() req: Request) {
     const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/refresh`, null, {
       headers: {
-        'Authorization': req.headers['authorization']
-      }
+        'Authorization': req.headers['authorization'],
+      },
     });
 
     return data;
@@ -97,10 +96,13 @@ export class UsersController {
     description: UserInfo.PasswordChanged,
   })
   @UseGuards(CheckAuthGuard)
-  @UseInterceptors(UseridInterceptor)
-  @Post('change-password')
-  public async changePassword(@Body() dto: ChangePasswordUserDto) {
-    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/update-password`, dto);
+  @Post('change-password/:id')
+  public async changePassword(@Req() req: Request, @Param('id') id: string, @Body() dto: ChangePasswordUserDto) {
+    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/update-password/${id}`, dto, {
+      headers: {
+        'Authorization': req.headers['authorization'],
+      },
+    });
 
     return data;
   }
@@ -116,13 +118,13 @@ export class UsersController {
   @Get('/:id')
   public async show(@Param('id', MongoIdValidationPipe) id: string) {
     const { data: userData } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Users}/${id}`);
-    const { data: postsCount } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/user-posts-count/${id}`);
+    const { data: publicationsCount } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/user-posts-count/${id}`);
     let avatar = null;
 
     if (userData.avatar) {
       avatar = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Files}/upload/${userData.avatar}`);
     }
 
-    return { ...userData, postsCount, avatar };
+    return { ...userData, publicationsCount, avatar };
   }
 }

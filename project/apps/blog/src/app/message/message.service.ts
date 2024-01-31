@@ -1,4 +1,4 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from "@nestjs/common";
 
 import { CreateMessageDto, UpdateMessageDto, MessageQuery } from '@project/shared/blog/dto';
 
@@ -40,6 +40,19 @@ export class MessageService {
 
     if (existMessage.userId !== userId) {
       throw new ConflictException(`The user with ID ${userId} cannot modify the post with with ID ${id}.`);
+    }
+
+    let hasChanges = false;
+
+    for (const [key, value] of Object.entries(dto)) {
+      if (value !== undefined && existMessage[key] !== value) {
+        existMessage[key] = value;
+        hasChanges = true;
+      }
+    }
+
+    if (!hasChanges) {
+      return existMessage;
     }
 
     return await this.messageRepository.update(id, existMessage);

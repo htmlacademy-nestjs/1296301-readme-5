@@ -5,7 +5,7 @@ import appConfig from './config/app/app.config';
 import jwtConfig from './config/jwt/jwt.config';
 import rabbitConfig from './config/rabbit/rabbit.config';
 
-const ENV_BLOG_FILE_PATH = 'apps/account/account.env';
+const ENV_BLOG_FILE_PATH = 'apps/blog/blog.env';
 
 @Module({
   imports: [

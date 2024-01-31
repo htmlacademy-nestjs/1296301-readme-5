@@ -1,13 +1,12 @@
 import { Controller, HttpStatus, Param, Post, Get, Delete, Req, UseGuards } from "@nestjs/common";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { fillDto } from '@project/shared/helpers';
+import { fillDto, CheckAuthGuard } from '@project/shared/helpers';
 import { RequestWithTokenPayload } from '@project/shared/app/types';
 
 import { LikesInfo } from './constants/like.constants';
 import { LikeService } from './like.service';
 import { LikeRdo } from './rdo/like.rdo';
-import { CheckAuthGuard } from '../guards/check-auth.guard';
 
 @ApiTags('likes')
 @Controller('likes')

@@ -1,0 +1,89 @@
+# Login user by email and password
+POST http://localhost:3000/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@test.local",
+  "password": "1234567"
+}
+
+###
+
+# Get post  by ID
+GET http://localhost:3001/api/posts/ab04593b-da99-4fe3-8b4b-e06d82e2efdd HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Get all posts
+GET http://localhost:3001/api/posts/?limit=25&page=1&tag=travel HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Get all posts by name
+GET http://localhost:3001/api/posts/search/title=Летняя%20вечеринка HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Get drafts
+GET http://localhost:3001/api/posts/drafts HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MzE3NDQsImV4cCI6MTcwNjczNTM0NH0.fLLdnNSEVC_0Syfm601n5DJ8XKCGE2IvO0v3_Ho85X8
+Content-Type: application/json
+
+###
+
+# Send news
+GET http://localhost:3001/api/posts/news HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTYxMzgsImV4cCI6MTcwNjcxNjczOH0.SarE26jyFLdgqQGS28l67WWmA9SUrZ3vmVZA5QpMwzE
+Content-Type: application/json
+
+###
+
+# Create a new post
+POST http://localhost:3001/api/posts/add HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTYxMzgsImV4cCI6MTcwNjcxNjczOH0.SarE26jyFLdgqQGS28l67WWmA9SUrZ3vmVZA5QpMwzE
+
+{
+  "type": "text",
+  "title": "Long title for text publication",
+  "announcement": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis erat sem, dictum ac cursus at, faucibus ut sapien. Duis ac.",
+  "tags": ["travel", "book", "techno"]
+}
+
+###
+
+# Get user posts count
+GET http://localhost:3001/api/posts//user-posts-count/65ba5ac31adbe1ca4f089cd6 HTTP/1.1
+Content-Type: application/json
+
+###
+
+# Repost
+POST  http://localhost:3001/api/posts/repost/d82e-99da-593b-ab044fe3-ef0db4b2e068 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTYxMzgsImV4cCI6MTcwNjcxNjczOH0.SarE26jyFLdgqQGS28l67WWmA9SUrZ3vmVZA5QpMwzE
+Content-Type: application/json
+
+###
+
+# Update post
+PATCH http://localhost:3001/api/posts/54a9a89e-6499-43df-b853-dd4abfaf43cc HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTYxMzgsImV4cCI6MTcwNjcxNjczOH0.SarE26jyFLdgqQGS28l67WWmA9SUrZ3vmVZA5QpMwzE
+
+{
+  "type": "text",
+  "title": "Летняя вечеринка под дождем",
+  "announcement": "Уже сегодня под проливным дождем начнется вечеринка года!"
+}
+
+###
+
+# Delete post  by ID
+DELETE http://localhost:3001/api/posts/f062f4bf-e27c-4909-b071-6116d01e6fed HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWJhNWFjMzFhZGJlMWNhNGYwODljZDYiLCJlbWFpbCI6InVzZXJAdGVzdC5sb2NhbCIsInVzZXJOYW1lIjoiVGVzdCBEb2UiLCJhdmF0YXIiOiIiLCJpYXQiOjE3MDY3MTYxMzgsImV4cCI6MTcwNjcxNjczOH0.SarE26jyFLdgqQGS28l67WWmA9SUrZ3vmVZA5QpMwzE
+
+###

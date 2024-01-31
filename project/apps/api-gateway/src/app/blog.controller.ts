@@ -8,7 +8,7 @@ import { CreatePostDto, PostQuery, SearchQuery, CreatePhotoPostDto, UpdatePostDt
 import { PublicationStatus } from '@project/shared/app/types';
 
 import { BlogInfo } from './app.constants';
-import { CheckAuthGuard } from './guards/check-auth.guard';
+import { CheckAuthGuard } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from './filters/axios-exeption.filter';
 
 import { ApplicationServiceURL } from './app.config';
@@ -28,7 +28,7 @@ export class BlogController {
   })
   @UseGuards(CheckAuthGuard)
   @UseInterceptors(UseridInterceptor)
-  @Post('/')
+  @Post('/add')
   public async create(@Req() req: Request, @Body() dto: CreatePostDto, @UploadedFile() file: Express.Multer.File) {
     if (file && dto instanceof CreatePhotoPostDto) {
       const formData = new FormData();
@@ -36,6 +36,7 @@ export class BlogController {
 
       const { data: photo } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Files}/upload/photo`, formData, {
         headers: {
+          'Authorization': req.headers['authorization'],
           'Content-Type': req.headers['content-type'],
           ...formData.getHeaders(),
         },
@@ -44,7 +45,11 @@ export class BlogController {
       dto.link = photo.path;
     }
 
-    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Blog}/add`, dto);
+    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Blog}/add`, dto, {
+      headers: {
+        'Authorization': req.headers['authorization'],
+      },
+    });
 
     return data;
   }
@@ -53,6 +58,7 @@ export class BlogController {
     status: HttpStatus.CREATED,
     description: BlogInfo.Add,
   })
+  @UseGuards(CheckAuthGuard)
   @Post('repost/:id')
   public async repost(@Req() req: Request, @Param('id') id: string) {
     const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Blog}/repost/${id}`, null, {
@@ -106,6 +112,7 @@ export class BlogController {
     status: HttpStatus.NOT_FOUND,
     description: BlogInfo.EmptyList
   })
+  @UseGuards(CheckAuthGuard)
   @Get('drafts')
   async showDrafts(@Req() req: Request) {
     const { data } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/drafts`,{
@@ -113,6 +120,7 @@ export class BlogController {
         'Authorization': req.headers['authorization'],
       },
     });
+
     return data;
   }
 
@@ -154,11 +162,12 @@ export class BlogController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: BlogInfo.DeleteError
   })
+  @UseGuards(CheckAuthGuard)
   @Delete('post/:id')
   public async delete(@Param('id') id: string, @Req() req: Request) {
     await this.httpService.axiosRef.delete(`${ApplicationServiceURL.Blog}/${id}`, {
       headers: {
-        'Authorization': req.headers['authorization']
+        'Authorization': req.headers['authorization'],
       },
     });
   }
@@ -171,6 +180,7 @@ export class BlogController {
     status: HttpStatus.NOT_FOUND,
     description: BlogInfo.PostNotFound
   })
+  @UseGuards(CheckAuthGuard)
   @Get('likes/:postId')
   public async getLikes(@Param('postId') postId: string, @Req() req: Request) {
     const { data } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Likes}/${postId}`,{
@@ -186,6 +196,7 @@ export class BlogController {
     status: HttpStatus.CREATED,
     description: BlogInfo.SetLike
   })
+  @UseGuards(CheckAuthGuard)
   @Post('likes/:postId')
   public async setLike(@Param('postId') postId: string, @Req() req: Request) {
     const { data: post } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/${postId}`);
@@ -209,6 +220,7 @@ export class BlogController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: BlogInfo.DeleteError
   })
+  @UseGuards(CheckAuthGuard)
   @Delete('likes/:postId')
   public async deleteLike(@Param('postId') postId: string, @Req() req: Request) {
     const { data } = await this.httpService.axiosRef.delete(`${ApplicationServiceURL.Likes}/${postId}`,{

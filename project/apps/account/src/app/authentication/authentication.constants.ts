@@ -11,3 +11,8 @@ export enum UserInfo {
   FoundUser = 'User found',
   RefreshToken = 'Get a new access/refresh tokens',
 }
+
+export enum HttpClientParam {
+  MaxRedirect = 5,
+  Timeout = 5000
+}

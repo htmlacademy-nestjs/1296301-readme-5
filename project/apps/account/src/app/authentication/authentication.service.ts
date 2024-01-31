@@ -45,7 +45,7 @@ export class AuthenticationService {
     const userEntity = await new BlogUserEntity(blogUser)
       .setPassword(password);
 
-    return this.blogUserRepository
+    return await this.blogUserRepository
       .save(userEntity);
   }
 
@@ -84,8 +84,8 @@ export class AuthenticationService {
     return existUser;
   }
 
-  public async changePassword(dto: ChangePasswordUserDto) {
-    const { password, newPassword, userId } = dto;
+  public async changePassword(dto: ChangePasswordUserDto, userId: string) {
+    const { password, newPassword } = dto;
     const existUser = await this.blogUserRepository.findById(userId);
 
     if (!await existUser.comparePassword(password)) {
