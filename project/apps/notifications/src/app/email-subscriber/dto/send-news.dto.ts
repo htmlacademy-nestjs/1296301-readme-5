@@ -2,10 +2,10 @@ import { IsArray, IsEmail, IsString } from 'class-validator';
 
 import { PostContentType } from '@project/shared/app/types';
 
-import { EMAIL_NOT_VALID } from '../email-subscriber.constant';
+import { EmailSubscriberInfo } from '../email-subscriber.constant';
 
 export class SendNewsDto {
-  @IsEmail({}, { message: EMAIL_NOT_VALID })
+  @IsEmail({}, { message: EmailSubscriberInfo.EmailNotValid })
   public email: string;
 
   @IsArray()

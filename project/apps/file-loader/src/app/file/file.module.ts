@@ -8,8 +8,6 @@ import { FileController } from './file.controller';
 import { FileRepository } from './file.repository';
 import { FileModel, FileSchema } from './file.model';
 
-const SERVE_ROOT = '/static';
-
 @Module({
   imports: [
     ServeStaticModule.forRootAsync({

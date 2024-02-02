@@ -20,19 +20,18 @@ export abstract class BasePostgresRepository<
   }
 
   public async findById(id: EntityType['id']): Promise<EntityType | null> {
-    throw new Error('Not implemented');
+    throw new Error(`Not implemented, received argument is ${id}`);
   }
 
   public async save(entity: EntityType): Promise<EntityType> {
-    throw new Error('Not implemented');
+    throw new Error(`Not implemented, received argument is ${entity}`);
   }
 
   public async update(id: EntityType['id'], entity: EntityType): Promise<EntityType> {
-    throw new Error('Not implemented');
+    throw new Error(`Not implemented, received arguments are ${id}, ${entity}`);
   }
 
   public async delete(id: EntityType['id']): Promise<void> {
-    throw new Error('Not implemented');
+    throw new Error(`Not implemented, received argument is ${id}`);
   }
-
 }

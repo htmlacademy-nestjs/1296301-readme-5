@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { PostType } from '../../../app/types/src';
 
 const FIRST_USER_ID = '658170cbb954e9f5b905ccf4';
 const SECOND_USER_ID = '6581762309c030b503e30512';
@@ -18,7 +17,7 @@ function getPosts() {
     {
       id: FIRST_POST_UUID,
       userId: FIRST_USER_ID,
-      type: PostType.text,
+      type: 'text',
       title: 'Летняя вечеринка',
       description: 'Самая светлая ночь в году!',
       likes: [
@@ -35,7 +34,7 @@ function getPosts() {
     {
       id: SECOND_POST_UUID,
       userId: SECOND_USER_ID,
-      type: PostType.video,
+      type: 'video',
       title: 'Видео с летней вечеринки в Бразилии',
       link: 'https://www.youtube.com/watch?v=R_osYkstaAE',
       tags: ['travel'],
@@ -52,7 +51,7 @@ function getPosts() {
     {
       id: THIRD_POST_UUID,
       userId: THIRD_USER_ID,
-      type: PostType.photo,
+      type: 'photo',
       link: 'https://www.labirint.ru/books/459698/',
       tags: ['travel', 'books'],
       likes: [
@@ -68,7 +67,7 @@ function getPosts() {
     {
       id: FOURTH_POST_UUID,
       userId: FOURTH_USER_ID,
-      type: PostType.link,
+      type: 'link',
       link: 'https://www.labirint.ru',
       description: 'Только в "Лабиринте"',
       likes: [
@@ -84,7 +83,7 @@ function getPosts() {
     {
       id: FIFTH_POST_UUID,
       userId: FIFTH_USER_ID,
-      type: PostType.quote,
+      type: 'quote',
       quoteAuthor: '«Безумный араб» Абдул Альхазред',
       description: 'В обычной живописи, знаешь ли, есть огромнейшая разница между живыми, дышащими вещами, написанными с натуры, и теми вымученными поделками, которые коммерческая мелкая сошка гонит по накатанному в мастерских с голыми стенами.',
       tags: ['books'],

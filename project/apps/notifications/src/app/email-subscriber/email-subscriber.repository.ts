@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { BaseMongoRepository } from '@project/shared/core';
-import { Subscriber } from '@project/shared/app/types';
 
 import { EmailSubscriberEntity } from './email-subscriber.entity';
 import { EmailSubscriberModel } from './email-subscriber.model';

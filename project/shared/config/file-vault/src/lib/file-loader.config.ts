@@ -1,8 +1,11 @@
 import { registerAs } from '@nestjs/config';
 import * as Joi from 'joi';
 
-const DEFAULT_PORT = 3000;
-const DEFAULT_MONGO_PORT = 27017;
+export enum FileLoaderParam {
+  DefaultPort = 3000,
+  DefaultMongoPort = 27017,
+}
+
 const ENVIRONMENTS = ['development', 'production', 'stage'] as const;
 
 type Environment = typeof ENVIRONMENTS[number];
@@ -24,7 +27,7 @@ export interface FileLoaderConfig {
 
 const validationSchema = Joi.object({
   environment: Joi.string().valid(...ENVIRONMENTS).required(),
-  port: Joi.number().port().default(DEFAULT_PORT),
+  port: Joi.number().port().default(FileLoaderParam.DefaultPort),
   uploadDirectory: Joi.string().required(),
   serveRoot: Joi.string().required(),
   db: Joi.object({
@@ -48,12 +51,12 @@ function validateConfig(config: FileLoaderConfig): void {
 function getConfig(): FileLoaderConfig {
   const config: FileLoaderConfig = {
     environment: process.env.NODE_ENV as Environment,
-    port: parseInt(process.env.PORT || `${DEFAULT_PORT}`, 10),
+    port: parseInt(process.env.PORT || `${FileLoaderParam.DefaultPort}`, 10),
     uploadDirectory: process.env.UPLOAD_DIRECTORY_PATH,
     serveRoot: process.env.SERVE_ROOT,
     db: {
       host: process.env.MONGO_HOST,
-      port: parseInt(process.env.MONGO_PORT ?? DEFAULT_MONGO_PORT.toString(), 10),
+      port: parseInt(process.env.MONGO_PORT ?? FileLoaderParam.DefaultMongoPort.toString(), 10),
       name: process.env.MONGO_DB,
       user: process.env.MONGO_USER,
       password: process.env.MONGO_PASSWORD,

@@ -3,19 +3,20 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsOptional, MaxLength, MinLength } from 'class-validator';
 
 import { PostType, SortBy, SortDirection } from '@project/shared/app/types';
-import { TagDefaultParam } from '../post.constants';
 
-import { DEFAULT_PAGE_COUNT, DEFAULT_POST_COUNT_LIMIT, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_BY } from './post.constant';
+import { Query } from './post-query.constant';
+
+import { TagDefaultParam } from '../post.constants';
 
 export class PostQuery {
   @ApiProperty({
     description: 'Limit',
     example: 25,
   })
-  @Transform(({ value }) => +value || DEFAULT_POST_COUNT_LIMIT)
+  @Transform(({ value }) => +value || Query.PostCountLimit)
   @IsNumber()
   @IsOptional()
-  public limit = DEFAULT_POST_COUNT_LIMIT;
+  public limit = Query.PostCountLimit;
 
   @ApiProperty({
     description: 'Type',
@@ -38,7 +39,7 @@ export class PostQuery {
   })
   @IsIn(Object.values(SortBy))
   @IsOptional()
-  public sortBy?: SortBy = DEFAULT_SORT_BY;
+  public sortBy?: SortBy = SortBy.CreatedAt;
 
   @ApiProperty({
     description: 'Tag',
@@ -55,13 +56,13 @@ export class PostQuery {
   })
   @IsIn(Object.values(SortDirection))
   @IsOptional()
-  public sortDirection?: SortDirection = DEFAULT_SORT_DIRECTION;
+  public sortDirection?: SortDirection = SortDirection.Desc;
 
   @ApiProperty({
     description: 'Page',
     example: 1,
   })
-  @Transform(({ value }) => +value || DEFAULT_PAGE_COUNT)
+  @Transform(({ value }) => +value || Query.PageCount)
   @IsOptional()
-  public page: number = DEFAULT_PAGE_COUNT;
+  public page: number = Query.PageCount;
 }

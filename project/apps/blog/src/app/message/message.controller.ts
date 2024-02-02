@@ -27,9 +27,9 @@ export class MessageController {
   })
   @Get(':id')
   async show(@Param('id') id: string) {
-    const comment = await this.messageService.getMessage(id);
+    const message = await this.messageService.getMessage(id);
 
-    return fillDto(MessageRdo, comment.toPOJO());
+    return fillDto(MessageRdo, message.toPOJO());
   }
 
   @ApiResponse({
@@ -52,9 +52,9 @@ export class MessageController {
   @UseGuards(CheckAuthGuard)
   @Post('/add')
   async create(@Req() { user }: RequestWithTokenPayload, @Body(CreateMessageValidationPipe) dto: CreateMessageDto) {
-    const newComment = await this.messageService.createMessage(dto, user.sub);
+    const newMessage = await this.messageService.createMessage(dto, user.sub);
 
-    return fillDto(MessageRdo, newComment.toPOJO());
+    return fillDto(MessageRdo, newMessage.toPOJO());
   }
 
   @ApiResponse({

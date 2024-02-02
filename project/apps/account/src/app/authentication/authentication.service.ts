@@ -12,7 +12,7 @@ import { User } from '@project/shared/app/types';
 import { CreateUserDto, LoginUserDto, ChangePasswordUserDto } from '@project/shared/blog/dto';
 
 import { BlogUserRepository } from '../blog-user/blog-user.repository';
-import { AUTH_USER_EXISTS, AUTH_USER_WRONG, AUTH_USER_NOT_FOUND, AUTH_USER_NOT_CORRECT_PASSWORD } from './authentication.constants';
+import { UserInfo } from './authentication.constants';
 import { BlogUserEntity } from '../blog-user/blog-user.entity';
 
 import { RefreshTokenService } from '../refresh-token/refresh-token.service';
@@ -39,7 +39,7 @@ export class AuthenticationService {
       .findByEmail(email);
 
     if (existUser) {
-      throw new ConflictException(AUTH_USER_EXISTS);
+      throw new ConflictException(UserInfo.ExistUser);
     }
 
     const userEntity = await new BlogUserEntity(blogUser)
@@ -54,11 +54,11 @@ export class AuthenticationService {
     const existUser = await this.blogUserRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new UnauthorizedException(AUTH_USER_WRONG);
+      throw new UnauthorizedException(UserInfo.WrongPassword);
     }
 
     if (!await existUser.comparePassword(password)) {
-      throw new UnauthorizedException(AUTH_USER_WRONG);
+      throw new UnauthorizedException(UserInfo.WrongPassword);
     }
 
     return existUser;
@@ -68,7 +68,7 @@ export class AuthenticationService {
     const existUser = await this.blogUserRepository.findById(id);
 
     if (!existUser) {
-      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+      throw new NotFoundException(UserInfo.NotFoundUser);
     }
 
     return existUser;
@@ -89,7 +89,7 @@ export class AuthenticationService {
     const existUser = await this.blogUserRepository.findById(userId);
 
     if (!await existUser.comparePassword(password)) {
-      throw new BadRequestException(AUTH_USER_NOT_CORRECT_PASSWORD);
+      throw new BadRequestException(UserInfo.NotCorrectPassword);
     }
 
     const userEntity = await existUser.setPassword(newPassword);

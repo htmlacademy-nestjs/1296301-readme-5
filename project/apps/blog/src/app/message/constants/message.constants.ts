@@ -1,7 +1,7 @@
 export enum MessageInfo {
-  Add = 'Comment added',
-  Remove = 'Comment removed',
-  Update = 'Comment updated',
-  ShowAll = 'All comments',
-  Show = 'Comment by id'
+  Add = 'Message added',
+  Remove = 'Message removed',
+  Update = 'Message updated',
+  ShowAll = 'All Messages',
+  Show = 'Message by id'
 }

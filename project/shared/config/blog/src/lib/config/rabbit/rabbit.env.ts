@@ -1,7 +1,7 @@
 import { IsNumber, IsOptional, IsString, Max, Min, validateOrReject } from 'class-validator';
 
 import { EnvValidationMessage } from './rabbit.messages';
-import { MIN_PORT, MAX_PORT, DEFAULT_RABBIT_PORT } from './rabbit.const';
+import { RabbitParam } from './rabbit.const';
 
 export class RabbitConfiguration {
   @IsString({ message: EnvValidationMessage.MQHostRequired })
@@ -20,10 +20,10 @@ export class RabbitConfiguration {
   public exchange: string;
 
   @IsNumber({}, { message: EnvValidationMessage.MQPortRequired })
-  @Min(MIN_PORT)
-  @Max(MAX_PORT)
+  @Min(RabbitParam.MinPort)
+  @Max(RabbitParam.MaxPort)
   @IsOptional()
-  public port: number = DEFAULT_RABBIT_PORT;
+  public port: number = RabbitParam.DefaultPort;
 
   public async validate(): Promise<void> {
     try {

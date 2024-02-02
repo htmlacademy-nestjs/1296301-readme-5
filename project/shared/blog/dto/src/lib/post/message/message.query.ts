@@ -4,7 +4,7 @@ import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { SortDirection } from '@project/shared/app/types';
 
-import { MAX_MESSAGES_COUNT, DEFAULT_SORT_DIRECTION } from './message.constants';
+import { Message } from './message.constants';
 
 export class MessageQuery {
   @ApiProperty({
@@ -14,7 +14,7 @@ export class MessageQuery {
   @Transform(({ value } ) => +value)
   @IsNumber()
   @IsOptional()
-  public limit: number = MAX_MESSAGES_COUNT;
+  public limit: number = Message.MaxMessagesCount;
 
   @ApiProperty({
     description: 'Post ID',
@@ -31,7 +31,7 @@ export class MessageQuery {
   @IsIn(Object.values(SortDirection))
   @IsString()
   @IsOptional()
-  public sortDirection: SortDirection = DEFAULT_SORT_DIRECTION;
+  public sortDirection: SortDirection = SortDirection.Desc;
 
   @ApiProperty({
     description: 'Page number',
