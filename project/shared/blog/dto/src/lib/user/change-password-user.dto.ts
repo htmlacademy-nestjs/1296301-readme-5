@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MaxLength, MinLength, IsNotEmpty } from 'class-validator';
+
 import { PasswordLength } from './user.constants';
 
 export class ChangePasswordUserDto {

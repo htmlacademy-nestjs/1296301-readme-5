@@ -1,4 +1,3 @@
-export const DEFAULT_AMOUNT = 0;
 export const DEFAULT_STATUS = false;
 
 export enum PostInfo {
@@ -27,9 +26,3 @@ export enum HttpClientParam {
   MaxRedirect = 5,
   Timeout = 5000
 }
-
-export const TagDefaultParam = {
-  MinLength: 3,
-  MaxLength: 10,
-  Amount: 8,
-};

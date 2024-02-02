@@ -105,12 +105,8 @@ export class PostController {
   @Get('/')
   public async index(@Query() query: PostQuery) {
     const postsWithPagination = await this.postService.getAllPostsByQuery(query);
-    const result = {
-      ...postsWithPagination,
-      entities: postsWithPagination.entities.map((post) => post.toPOJO()),
-    };
 
-    return fillDto(PostWithPaginationRdo, result);
+    return fillDto(PostWithPaginationRdo, postsWithPagination);
   }
 
   @ApiResponse({

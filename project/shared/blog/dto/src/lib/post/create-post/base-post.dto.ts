@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsMongoId, ArrayMaxSize, IsEnum, IsOptional, Matches, MaxLength, MinLength, NotContains } from 'class-validator';
 
 import { PostType, PublicationStatus } from '@project/shared/app/types';
-import { RegExpPattern, TagDefaultParam, PostsError } from "../post.constants";
+import { RegExpPattern, TagDefaultParam, PostsError } from '../post.constants';
 
 
 export class BasePostDto {

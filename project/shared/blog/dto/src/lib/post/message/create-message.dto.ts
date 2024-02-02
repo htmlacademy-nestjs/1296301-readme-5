@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MinLength, MaxLength } from 'class-validator';
 
-import { MessageTextLength } from './message.constants';
+import { Message } from './message.constants';
 
 export class CreateMessageDto {
   @ApiProperty({
@@ -9,8 +9,8 @@ export class CreateMessageDto {
     example: 'Message',
   })
   @IsString()
-  @MinLength(MessageTextLength.Min)
-  @MaxLength(MessageTextLength.Max)
+  @MinLength(Message.MinTextLength)
+  @MaxLength(Message.MaxTextLength)
   public message: string;
 
   @ApiProperty({

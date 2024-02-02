@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { PaginationResult } from '@project/shared/app/types';
+import { PaginationResult, PostContentType } from '@project/shared/app/types';
 import { CreatePostDto, UpdatePostDto, PostQuery, SearchQuery } from '@project/shared/blog/dto';
 
 import { PostRepository } from './post.repository';
@@ -43,8 +43,13 @@ export class PostService {
     return await this.postRepository.getPostCount({ userId: id });
   }
 
-  public async getAllPostsByQuery(query?: PostQuery): Promise<PaginationResult<PostContentEntity>> {
-    return await this.postRepository.find(query);
+  public async getAllPostsByQuery(query?: PostQuery): Promise<PaginationResult<PostContentType>> {
+    const postsWithPagination = await this.postRepository.find(query);
+
+    return {
+      ...postsWithPagination,
+      entities: postsWithPagination.entities.map((post) => post.toPOJO()),
+    };
   }
 
   public async updatePost(id: string, dto: UpdatePostDto, userId: string): Promise<PostContentEntity> {

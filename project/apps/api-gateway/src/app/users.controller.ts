@@ -38,14 +38,14 @@ export class UsersController {
     status: HttpStatus.CREATED,
     description: UserInfo.Register,
   })
-  @UseInterceptors(FileInterceptor('file') as any)
+  @UseInterceptors(FileInterceptor('avatar'))
   @Post('registration')
   public async register(@Req() req: Request, @Body() createUserDto: CreateUserDto, @UploadedFile() file: Express.Multer.File) {
     let path;
 
     if (file) {
       const formData = new FormData();
-      formData.append('file', Buffer.from(file.buffer), file.originalname);
+      formData.append('avatar', Buffer.from(file.buffer), file.originalname);
       const { data: avatar } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Files}/upload/avatar`, formData, {
         headers: {
           'Content-Type': req.headers['content-type'],

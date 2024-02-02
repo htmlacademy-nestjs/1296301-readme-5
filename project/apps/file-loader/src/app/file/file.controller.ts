@@ -13,7 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/core';
 
-import { FileLoaderInfo } from './file.constants';
+import { FileLoaderInfo, ImageType } from './file.constants';
 import { FileService } from './file.service';
 import { UploadedFileRdo } from './rdo/uploaded-file.rdo';
 import { FileValidationPipe } from './pipes/validate-file.pipe';
@@ -30,10 +30,9 @@ export class FileController {
     status: HttpStatus.OK,
     description: FileLoaderInfo.Uploaded,
   })
-  @UseInterceptors(FileInterceptor('avatar') as any)
+  @UseInterceptors(FileInterceptor(ImageType.Avatar))
   @Post('upload/avatar')
   public async uploadAvatar(@UploadedFile(FileValidationPipe) file: Express.Multer.File) {
-    console.log(file)
     const fileEntity = await this.fileService.saveFile(file);
 
     return fillDto(UploadedFileRdo, fileEntity.toPOJO());
@@ -44,7 +43,7 @@ export class FileController {
     status: HttpStatus.OK,
     description: FileLoaderInfo.Uploaded,
   })
-  @UseInterceptors(FileInterceptor('photo') as any)
+  @UseInterceptors(FileInterceptor(ImageType.Photo))
   @Post('upload/photo')
   public async uploadFile(@UploadedFile(FileValidationPipe) file: Express.Multer.File) {
     const fileEntity = await this.fileService.saveFile(file);

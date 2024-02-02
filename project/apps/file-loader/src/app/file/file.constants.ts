@@ -4,9 +4,9 @@ export enum FileLoaderInfo {
 }
 
 export const  FileError = {
-  FileNotFound : "File with such id is not found",
-  MimetypeError: "Wrong file mimetype",
-  InvalidSize: "File size is too big",
+  FileNotFound : 'File with such id is not found',
+  MimetypeError: 'Wrong file mimetype',
+  InvalidSize: 'File size is too big',
 } as const;
 
 export const MaxImageSizeInByte = {

@@ -1,6 +1,6 @@
-import { Post, PostType, PostTypeValues, PublicationStatusValues, Entity, Message, Like, PublicationStatus } from '@project/shared/app/types';
+import { Post, PostTypeValues, PublicationStatusValues, Entity, Message, Like } from '@project/shared/app/types';
 
-import { DEFAULT_AMOUNT, DEFAULT_STATUS } from '../constants/post.constant';
+import { DEFAULT_STATUS } from '../constants/post.constant';
 
 export abstract class PostEntity implements Post, Entity<string, Post> {
   public id?: string;

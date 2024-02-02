@@ -1,20 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsIn, IsNumber, IsOptional } from 'class-validator';
+import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 import { SortDirection } from '@project/shared/app/types';
 
-import { DEFAULT_POST_SEARCH_COUNT_LIMIT, DEFAULT_SORT_DIRECTION } from './post.constant';
+import { Query } from './post-query.constant';
 
 export class SearchQuery {
   @ApiProperty({
     description: 'Limit',
     example: 25,
   })
-  @Transform(({ value } ) => +value || DEFAULT_POST_SEARCH_COUNT_LIMIT)
+  @Transform(({ value } ) => +value || Query.PostSearchCountLimit)
   @IsNumber()
   @IsOptional()
-  public limit = DEFAULT_POST_SEARCH_COUNT_LIMIT;
+  public limit = Query.PostSearchCountLimit;
 
   @ApiProperty({
     description: 'Sort direction',
@@ -22,7 +22,7 @@ export class SearchQuery {
   })
   @IsIn(Object.values(SortDirection))
   @IsOptional()
-  public sortDirection: SortDirection = DEFAULT_SORT_DIRECTION;
+  public sortDirection: SortDirection = SortDirection.Desc;
 
   @ApiProperty({
     description: 'Title',

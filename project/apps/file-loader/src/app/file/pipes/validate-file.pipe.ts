@@ -1,6 +1,7 @@
-import { Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
-import { ALLOWED_MIMETYPES, FileError, ImageType, MaxImageSizeInByte, } from '../file.constants';
 import { extension } from 'mime-types';
+import { Injectable, PipeTransform, BadRequestException } from '@nestjs/common';
+
+import { ALLOWED_MIMETYPES, FileError, ImageType, MaxImageSizeInByte, } from '../file.constants';
 
 @Injectable()
 export class FileValidationPipe implements PipeTransform {

@@ -1,5 +1,5 @@
-import { PostType, PostTypeValues } from './enum/post-type.enum';
-import { PublicationStatus, PublicationStatusValues } from './enum/publication-status.enum';
+import { PostTypeValues } from './enum/post-type.enum';
+import { PublicationStatusValues } from './enum/publication-status.enum';
 import { Message } from '../message/message.interface';
 import { Like } from '../like/like.interface';
 

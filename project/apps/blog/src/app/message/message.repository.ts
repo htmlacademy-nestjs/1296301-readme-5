@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BasePostgresRepository } from '@project/shared/core';
 import { PrismaClientService } from '@project/shared/blog/models';
-import { Message, EntityIdType } from '@project/shared/app/types';
+import { Message } from '@project/shared/app/types';
 import { MessageQuery } from '@project/shared/blog/dto';
 
 import { MessageEntity } from './message.entity';
@@ -65,7 +65,7 @@ export class MessageRepository extends BasePostgresRepository<MessageEntity, Mes
 
     const record = await this.client.message.update({
       where: {
-        id
+        id,
       },
       data: { ...pojoEntity, id }
     });
@@ -76,8 +76,8 @@ export class MessageRepository extends BasePostgresRepository<MessageEntity, Mes
   public async delete(id: string): Promise<void> {
     await this.client.message.delete({
       where: {
-        id
-      }
+        id,
+      },
     });
   }
 }

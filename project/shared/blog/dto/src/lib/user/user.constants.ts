@@ -5,7 +5,7 @@ export enum AuthUserInfo {
 export const NameLength = {
   Min: 3,
   Max: 50,
-};
+} as const;
 
 export enum PasswordLength {
   Min = 6,

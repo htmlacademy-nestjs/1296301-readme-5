@@ -32,11 +32,10 @@ export class BlogController {
   public async create(@Req() req: Request, @Body() dto: CreatePostDto, @UploadedFile() file: Express.Multer.File) {
     if (file && dto instanceof CreatePhotoPostDto) {
       const formData = new FormData();
-      formData.append('file', Buffer.from(file.buffer), file.originalname);
+      formData.append('photo', Buffer.from(file.buffer), file.originalname);
 
       const { data: photo } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Files}/upload/photo`, formData, {
         headers: {
-          'Authorization': req.headers['authorization'],
           'Content-Type': req.headers['content-type'],
           ...formData.getHeaders(),
         },

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+
 import { AuthUserInfo, PasswordLength } from './user.constants';
 
 export class LoginUserDto {

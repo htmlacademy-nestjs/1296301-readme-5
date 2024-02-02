@@ -16,7 +16,7 @@ export * from './lib/post/update-post/update-video-post.dto';
 
 export * from './lib/post/query/post.query';
 export * from './lib/post/query/search.query';
-export * from './lib/post/query/post.constant';
+export * from './lib/post/query/post-query.constant';
 
 export * from './lib/post/message/create-message.dto';
 export * from './lib/post/message/update-message.dto';
